@@ -10,14 +10,10 @@ const FIELD_LIMITS = {
 
 const ALLOWED_SERVICES = new Set([
   "Diagnóstico técnico",
-  "Infraestructura IT",
   "Redes y WiFi",
   "CCTV / cámaras y seguridad",
-  "Automatización",
-  "Páginas web",
-  "Monitoreo",
-  "Soporte técnico",
-  "Gestión de proyectos",
+  "Soporte e infraestructura",
+  "Web, monitoreo y automatización",
   "Otro"
 ]);
 
@@ -107,34 +103,7 @@ function setAccordionState(button, shouldOpen) {
   button.setAttribute("aria-expanded", String(shouldOpen));
   button.classList.toggle("is-open", shouldOpen);
   panel.classList.toggle("is-open", shouldOpen);
-
-  if (shouldOpen) {
-    panel.hidden = false;
-    panel.style.height = `${panel.scrollHeight}px`;
-
-    const handleTransitionEnd = (event) => {
-      if (event.propertyName !== "height") return;
-      panel.style.height = "auto";
-      panel.removeEventListener("transitionend", handleTransitionEnd);
-    };
-
-    panel.addEventListener("transitionend", handleTransitionEnd);
-    return;
-  }
-
-  panel.style.height = `${panel.scrollHeight}px`;
-
-  requestAnimationFrame(() => {
-    panel.style.height = "0px";
-  });
-
-  const handleTransitionEnd = (event) => {
-    if (event.propertyName !== "height") return;
-    panel.hidden = true;
-    panel.removeEventListener("transitionend", handleTransitionEnd);
-  };
-
-  panel.addEventListener("transitionend", handleTransitionEnd);
+  panel.hidden = !shouldOpen;
 }
 
 function moveAccordionFocus(targetIndex) {
@@ -158,18 +127,20 @@ accordionButtons.forEach((button, index) => {
   if (panel) {
     panel.hidden = !isExpanded;
     panel.classList.toggle("is-open", isExpanded);
-    panel.style.height = isExpanded ? "auto" : "0px";
   }
 
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  button.addEventListener("click", () => {
     const shouldOpen = button.getAttribute("aria-expanded") !== "true";
     setAccordionState(button, shouldOpen);
   });
 
   button.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+      event.preventDefault();
+      const shouldOpen = button.getAttribute("aria-expanded") !== "true";
+      setAccordionState(button, shouldOpen);
+    }
+
     if (event.key === "ArrowDown") {
       event.preventDefault();
       moveAccordionFocus(index + 1);
@@ -346,4 +317,3 @@ sendEmail.addEventListener("click", openEmail);
   field.addEventListener("input", () => setFieldError(fieldName, ""));
   field.addEventListener("change", () => setFieldError(fieldName, ""));
 });
-
