@@ -11,7 +11,7 @@ const FIELD_LIMITS = {
 const ALLOWED_SERVICES = new Set([
   "Diagnóstico técnico",
   "Redes y WiFi",
-  "CCTV / cámaras y seguridad",
+  "CCTV, alarmas, accesos e incendio",
   "Soporte e infraestructura",
   "Web, monitoreo y automatización",
   "Otro"
