@@ -142,9 +142,9 @@ textarea {
 }
 
 .brand {
-  display: grid;
-  gap: 0.05rem;
-  min-width: 190px;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .brand__name {
@@ -153,12 +153,6 @@ textarea {
   font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-}
-
-.brand__tagline {
-  color: var(--text-muted-dark);
-  font-size: 0.78rem;
-  font-weight: 600;
 }
 
 .nav-menu {
@@ -829,17 +823,26 @@ p {
 
 .security-solution-card__media,
 .brand-card__media,
+.software-card__media,
 .product-ref-card__media {
   display: grid;
   place-items: center;
   background: var(--surface-soft);
   border: 1px solid rgba(15, 107, 63, 0.14);
   aspect-ratio: 16 / 10;
+  min-height: 132px;
   overflow: hidden;
+  border-radius: 0;
 }
 
 .security-solution-card__media {
   margin: 0 0 0.9rem;
+}
+
+.software-card__media {
+  margin: 0 0 0.9rem;
+  aspect-ratio: 4 / 3;
+  min-height: 150px;
 }
 
 .security-solution-card h4,
@@ -895,7 +898,6 @@ p {
 }
 
 .brand-card__media {
-  min-height: 120px;
   padding: 1rem;
 }
 
@@ -913,6 +915,10 @@ p {
 
 .software-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.software-card {
+  padding: 1rem;
 }
 
 .product-ref-grid {
@@ -945,9 +951,10 @@ p {
 
 .brand-card__media img,
 .product-ref-card__media img,
-.security-solution-card__media img {
+.security-solution-card__media img,
+.software-card__media img {
   max-width: 88%;
-  max-height: 82%;
+  max-height: 88%;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -957,6 +964,17 @@ p {
 .product-ref-card__media--wide img {
   max-width: 94%;
   max-height: 88%;
+}
+
+.software-card__media img {
+  max-height: 90%;
+}
+
+.software-card__media img[src$="dmss-app.png"],
+.software-card__media img[src$="dmss app.png"],
+.software-card__media img[src$="unnamed.webp"] {
+  max-height: 92%;
+  max-width: 72%;
 }
 
 .product-ref-card__body {
@@ -1383,6 +1401,16 @@ textarea.is-invalid {
   }
 }
 
+@media (min-width: 900px) {
+  .brand-logo-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .product-ref-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 860px) {
   .nav-toggle {
     display: inline-flex;
@@ -1464,10 +1492,6 @@ textarea.is-invalid {
     font-size: 0.98rem;
   }
 
-  .brand__tagline {
-    font-size: 0.72rem;
-  }
-
   .nav-menu {
     top: 72px;
     left: 16px;
@@ -1522,14 +1546,24 @@ textarea.is-invalid {
 
   .brand-card__media,
   .product-ref-card__media,
-  .security-solution-card__media {
+  .security-solution-card__media,
+  .software-card__media {
     min-height: 140px;
   }
 
   .brand-card__media img,
   .product-ref-card__media img,
-  .security-solution-card__media img {
+  .security-solution-card__media img,
+  .software-card__media img {
     max-height: clamp(120px, 38vw, 220px);
+  }
+
+  .software-card__media {
+    min-height: 170px;
+  }
+
+  .software-card__media img {
+    max-height: 150px;
   }
 
   .dashboard__top,
