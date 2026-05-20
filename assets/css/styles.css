@@ -768,15 +768,8 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.brand-showcase {
-  margin-top: 1.25rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--accent-line);
-}
-
 .security-solutions,
 .security-usecases,
-.software-showcase,
 .product-ref-section {
   margin-top: 1.25rem;
   padding-top: 1.1rem;
@@ -798,7 +791,6 @@ p {
 
 .security-solutions-grid,
 .security-usecases__grid,
-.software-grid,
 .product-ref-grid {
   display: grid;
   gap: 1rem;
@@ -810,20 +802,16 @@ p {
 
 .security-solution-card,
 .security-usecase-card,
-.software-card,
 .product-ref-card {
   background: var(--surface);
   border-left: 3px solid var(--accent-line);
 }
 
-.security-solution-card,
-.software-card {
+.security-solution-card {
   padding: 1rem;
 }
 
 .security-solution-card__media,
-.brand-card__media,
-.software-card__media,
 .product-ref-card__media {
   display: grid;
   place-items: center;
@@ -839,19 +827,11 @@ p {
   margin: 0 0 0.9rem;
 }
 
-.software-card__media {
-  margin: 0 0 0.9rem;
-  aspect-ratio: 4 / 3;
-  min-height: 150px;
-}
-
-.security-solution-card h4,
-.software-card h4 {
+.security-solution-card h4 {
   margin-bottom: 0.45rem;
 }
 
-.security-solution-card p,
-.software-card p {
+.security-solution-card p {
   margin-bottom: 0.9rem;
   color: var(--text-muted-dark);
 }
@@ -883,44 +863,6 @@ p {
   color: var(--text-muted-dark);
 }
 
-.brand-logo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.brand-card {
-  display: grid;
-  gap: 0.6rem;
-  padding: 1rem;
-  background: var(--surface);
-  border-left: 3px solid var(--accent-line);
-}
-
-.brand-card__media {
-  padding: 1rem;
-}
-
-.brand-card__label {
-  color: var(--text-dark);
-  font-size: 1rem;
-}
-
-.brand-card__meta {
-  color: var(--text-muted-dark);
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.45;
-}
-
-.software-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.software-card {
-  padding: 1rem;
-}
-
 .product-ref-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -949,10 +891,8 @@ p {
   background: var(--surface-soft);
 }
 
-.brand-card__media img,
 .product-ref-card__media img,
-.security-solution-card__media img,
-.software-card__media img {
+.security-solution-card__media img {
   max-width: 88%;
   max-height: 88%;
   width: auto;
@@ -964,17 +904,6 @@ p {
 .product-ref-card__media--wide img {
   max-width: 94%;
   max-height: 88%;
-}
-
-.software-card__media img {
-  max-height: 90%;
-}
-
-.software-card__media img[src$="dmss-app.png"],
-.software-card__media img[src$="dmss app.png"],
-.software-card__media img[src$="unnamed.webp"] {
-  max-height: 92%;
-  max-width: 72%;
 }
 
 .product-ref-card__body {
@@ -1389,25 +1318,10 @@ textarea.is-invalid {
   .package-grid,
   .timeline,
   .tech-grid,
-  .brand-logo-grid,
   .security-solutions-grid,
   .security-usecases__grid,
   .product-ref-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .software-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 900px) {
-  .brand-logo-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .product-ref-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1534,36 +1448,22 @@ textarea.is-invalid {
   .package-grid,
   .timeline,
   .tech-grid,
-  .brand-logo-grid,
   .security-solutions-grid,
   .security-usecases__grid,
-  .software-grid,
   .product-ref-grid,
   .comparison,
   .contact-form {
     grid-template-columns: 1fr;
   }
 
-  .brand-card__media,
   .product-ref-card__media,
-  .security-solution-card__media,
-  .software-card__media {
+  .security-solution-card__media {
     min-height: 140px;
   }
 
-  .brand-card__media img,
   .product-ref-card__media img,
-  .security-solution-card__media img,
-  .software-card__media img {
+  .security-solution-card__media img {
     max-height: clamp(120px, 38vw, 220px);
-  }
-
-  .software-card__media {
-    min-height: 170px;
-  }
-
-  .software-card__media img {
-    max-height: 150px;
   }
 
   .dashboard__top,

@@ -9,7 +9,7 @@ const FIELD_LIMITS = {
 };
 
 const ALLOWED_SERVICES = new Set([
-  "Diagnóstico técnico",
+  "Revisión técnica / diagnóstico",
   "Redes y WiFi",
   "CCTV, alarmas, accesos e incendio",
   "Soporte e infraestructura",
@@ -264,7 +264,7 @@ function buildMessage(values) {
   const companyLine = values.company ? `Empresa u organización: ${values.company}` : "Empresa u organización: No indicada";
 
   return [
-    "Hola Jesareko, quiero solicitar un diagnóstico técnico.",
+    "Hola Jesareko, quiero consultar por una revisión técnica.",
     "",
     `Nombre: ${values.name}`,
     companyLine,
@@ -302,7 +302,7 @@ function openEmail() {
     return;
   }
 
-  const subject = encodeURIComponent(`Solicitud de diagnóstico técnico - ${values.service}`);
+  const subject = encodeURIComponent(`Consulta técnica - ${values.service}`);
   const body = encodeURIComponent(buildMessage(values));
   const url = `mailto:${emailAddress}?subject=${subject}&body=${body}`;
   formStatus.textContent = "Abriendo el cliente de correo con el mensaje preparado.";
