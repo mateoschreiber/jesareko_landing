@@ -1,4 +1,4 @@
-﻿const WHATSAPP_NUMBER = "595971141032";
+const WHATSAPP_NUMBER = "595971141032";
 const EMAIL_TO = "alemateo07@gmail.com";
 
 const FIELD_LIMITS = {
@@ -317,3 +317,75 @@ sendEmail.addEventListener("click", openEmail);
   field.addEventListener("input", () => setFieldError(fieldName, ""));
   field.addEventListener("change", () => setFieldError(fieldName, ""));
 });
+
+const canUseLiquidPointer = !window.matchMedia("(pointer: coarse)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (canUseLiquidPointer) {
+  const rootElement = document.documentElement;
+  const liquidTargets = ".site-header, .nav-menu, .nav-links a, .btn, .dashboard, .metric-card, .service-card, .case-card, .benefit-card, .tech-group, .security-solution-card, .security-usecase-card, .product-ref-card, .accordion-item, .contact-form, .final-cta__inner, .back-to-top";
+  let frame = 0;
+  let lastEvent = null;
+  let activeTargets = new Set();
+
+  function setLocalLight(target, event) {
+    const rect = target.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+
+    target.style.setProperty("--mx", `${x.toFixed(2)}%`);
+    target.style.setProperty("--my", `${y.toFixed(2)}%`);
+  }
+
+  function updateLiquidPointer() {
+    frame = 0;
+    if (!lastEvent) return;
+
+    const xPercent = (lastEvent.clientX / window.innerWidth) * 100;
+    const yPercent = (lastEvent.clientY / window.innerHeight) * 100;
+
+    document.body.classList.add("has-pointer-glow");
+    rootElement.style.setProperty("--page-mx-px", `${lastEvent.clientX}px`);
+    rootElement.style.setProperty("--page-my-px", `${lastEvent.clientY}px`);
+    rootElement.style.setProperty("--page-mx", `${xPercent.toFixed(2)}%`);
+    rootElement.style.setProperty("--page-my", `${yPercent.toFixed(2)}%`);
+
+    const target = lastEvent.target.closest(liquidTargets);
+    const nextTargets = new Set();
+
+    if (target) {
+      nextTargets.add(target);
+      [".dashboard", ".accordion-item", ".contact-form", ".final-cta__inner"].forEach((selector) => {
+        const parent = target.closest(selector);
+        if (parent) nextTargets.add(parent);
+      });
+    }
+
+    activeTargets.forEach((activeTarget) => {
+      if (!nextTargets.has(activeTarget)) {
+        activeTarget.style.removeProperty("--mx");
+        activeTarget.style.removeProperty("--my");
+      }
+    });
+
+    nextTargets.forEach((activeTarget) => setLocalLight(activeTarget, lastEvent));
+    activeTargets = nextTargets;
+  }
+
+  document.addEventListener("pointermove", (event) => {
+    lastEvent = event;
+    if (!frame) frame = window.requestAnimationFrame(updateLiquidPointer);
+  }, { passive: true });
+
+  document.addEventListener("pointerleave", () => {
+    document.body.classList.remove("has-pointer-glow");
+    activeTargets.forEach((activeTarget) => {
+      activeTarget.style.removeProperty("--mx");
+      activeTarget.style.removeProperty("--my");
+    });
+    activeTargets = new Set();
+    lastEvent = null;
+  });
+}
+
