@@ -11,7 +11,7 @@
 - Activar `Brotli`.
 - Activar `Auto Minify` para HTML, CSS y JS si esta disponible en el plan.
 - Crear Cache Rules:
-  - `/assets/*`: cache publico largo, por ejemplo Edge TTL de 1 mes a 1 ano.
+  - `/assets/*`: cache publico de 1 dia mientras los archivos mantengan nombres estables.
   - `/`, `/index.html`, `/robots.txt`, `/sitemap.xml`: cache corto, por ejemplo 5 a 60 minutos.
 - Purgar cache despues de cambiar `index.html`, CSS, JS, `robots.txt` o `sitemap.xml`.
 

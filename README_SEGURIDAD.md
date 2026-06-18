@@ -5,7 +5,7 @@
 - Se agregaron headers recomendados: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` y `Cross-Origin-Resource-Policy`.
 - Se movieron estilos inline del dashboard a clases CSS para evitar `unsafe-inline` en estilos.
 - El formulario sigue siendo estatico, pero ahora normaliza texto, elimina caracteres de control, limita longitudes y construye WhatsApp/mailto con `encodeURIComponent`.
-- Se generaron versiones minificadas de CSS y JS para produccion.
+- CSS y JavaScript tienen una sola fuente de verdad; la compresion se delega al CDN.
 - Se agregaron archivos de despliegue para Cloudflare Pages/Netlify, Nginx y Apache.
 - Se agregaron `robots.txt`, `sitemap.xml` y `.gitignore`.
 
@@ -18,8 +18,8 @@
 ## Despliegue con Cloudflare Pages
 1. Subir el repositorio a GitHub.
 2. Crear un proyecto en Cloudflare Pages conectado al repo.
-3. Configurar sin build command y con directorio de salida `/`.
-4. Copiar `deploy/_headers` a la raiz publicada si Cloudflare Pages no toma headers desde `/deploy`.
+3. Configurar sin build command y con directorio de salida `/public`.
+4. Las cabeceras se leen directamente desde `public/_headers`.
 5. Configurar el dominio propio.
 6. Activar HTTPS y revisar que la landing cargue sin errores CSP en DevTools.
 7. Verificar `https://jesareko.com/`, WhatsApp, email, GitHub y la imagen Open Graph antes de publicar.

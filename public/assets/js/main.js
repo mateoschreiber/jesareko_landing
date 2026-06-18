@@ -38,6 +38,18 @@ function setHeaderState() {
   backToTop.classList.toggle("is-visible", window.scrollY > 520);
 }
 
+let scrollUpdatePending = false;
+
+function scheduleHeaderStateUpdate() {
+  if (scrollUpdatePending) return;
+
+  scrollUpdatePending = true;
+  requestAnimationFrame(() => {
+    setHeaderState();
+    scrollUpdatePending = false;
+  });
+}
+
 function closeMobileMenu() {
   navToggle.classList.remove("is-open");
   primaryMenu.classList.remove("is-open");
@@ -71,7 +83,7 @@ backToTop.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-window.addEventListener("scroll", setHeaderState, { passive: true });
+window.addEventListener("scroll", scheduleHeaderStateUpdate, { passive: true });
 setHeaderState();
 
 const observedSections = navLinks
@@ -112,13 +124,11 @@ function setAccordionState(button, shouldOpen) {
     panel.hidden = false;
     panel.style.height = `${panel.scrollHeight}px`;
 
-    const handleTransitionEnd = (event) => {
+    panel.ontransitionend = (event) => {
       if (event.propertyName !== "height") return;
       panel.style.height = "auto";
-      panel.removeEventListener("transitionend", handleTransitionEnd);
+      panel.ontransitionend = null;
     };
-
-    panel.addEventListener("transitionend", handleTransitionEnd);
     return;
   }
 
@@ -128,13 +138,11 @@ function setAccordionState(button, shouldOpen) {
     panel.style.height = "0px";
   });
 
-  const handleTransitionEnd = (event) => {
+  panel.ontransitionend = (event) => {
     if (event.propertyName !== "height") return;
     panel.hidden = true;
-    panel.removeEventListener("transitionend", handleTransitionEnd);
+    panel.ontransitionend = null;
   };
-
-  panel.addEventListener("transitionend", handleTransitionEnd);
 }
 
 function moveAccordionFocus(targetIndex) {
@@ -258,23 +266,11 @@ function validateForm() {
 
   const errors = {
     name: values.name ? "" : "Indique su nombre para poder responder.",
-    company: values.company.length <= FIELD_LIMITS.company ? "" : "La empresa no puede superar 100 caracteres.",
+    company: "",
     city: values.city ? "" : "Indique la ciudad donde está la infraestructura.",
     service: ALLOWED_SERVICES.has(values.service) ? "" : "Seleccione el servicio de interés.",
     message: values.message ? "" : "Cuente brevemente qué necesita mejorar."
   };
-
-  if (values.name.length > FIELD_LIMITS.name) {
-    errors.name = "El nombre no puede superar 80 caracteres.";
-  }
-
-  if (values.city.length > FIELD_LIMITS.city) {
-    errors.city = "La ciudad no puede superar 80 caracteres.";
-  }
-
-  if (values.message.length > FIELD_LIMITS.message) {
-    errors.message = "El mensaje no puede superar 1000 caracteres.";
-  }
 
   Object.entries(errors).forEach(([field, message]) => setFieldError(field, message));
 
@@ -344,6 +340,5 @@ sendEmail.addEventListener("click", openEmail);
 ["name", "company", "city", "service", "message"].forEach((fieldName) => {
   const field = contactForm.elements[fieldName];
   field.addEventListener("input", () => setFieldError(fieldName, ""));
-  field.addEventListener("change", () => setFieldError(fieldName, ""));
 });
 
