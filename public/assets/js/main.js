@@ -1,4 +1,4 @@
-﻿const WHATSAPP_NUMBER = "595971141032";
+const WHATSAPP_NUMBER = "595971141032";
 const EMAIL_TO = "alemateo07@gmail.com";
 
 const FIELD_LIMITS = {
@@ -9,15 +9,11 @@ const FIELD_LIMITS = {
 };
 
 const ALLOWED_SERVICES = new Set([
-  "Diagnóstico técnico",
-  "Infraestructura IT",
+  "Revisión técnica / diagnóstico",
   "Redes y WiFi",
-  "CCTV / cámaras y seguridad",
-  "Automatización",
-  "Páginas web",
-  "Monitoreo",
-  "Soporte técnico",
-  "Gestión de proyectos",
+  "CCTV, alarmas, accesos e incendio",
+  "Soporte e infraestructura",
+  "Web, monitoreo y automatización",
   "Otro"
 ]);
 
@@ -119,30 +115,7 @@ function setAccordionState(button, shouldOpen) {
   button.setAttribute("aria-expanded", String(shouldOpen));
   button.classList.toggle("is-open", shouldOpen);
   panel.classList.toggle("is-open", shouldOpen);
-
-  if (shouldOpen) {
-    panel.hidden = false;
-    panel.style.height = `${panel.scrollHeight}px`;
-
-    panel.ontransitionend = (event) => {
-      if (event.propertyName !== "height") return;
-      panel.style.height = "auto";
-      panel.ontransitionend = null;
-    };
-    return;
-  }
-
-  panel.style.height = `${panel.scrollHeight}px`;
-
-  requestAnimationFrame(() => {
-    panel.style.height = "0px";
-  });
-
-  panel.ontransitionend = (event) => {
-    if (event.propertyName !== "height") return;
-    panel.hidden = true;
-    panel.ontransitionend = null;
-  };
+  panel.hidden = !shouldOpen;
 }
 
 function moveAccordionFocus(targetIndex) {
@@ -166,13 +139,9 @@ accordionButtons.forEach((button, index) => {
   if (panel) {
     panel.hidden = !isExpanded;
     panel.classList.toggle("is-open", isExpanded);
-    panel.style.height = isExpanded ? "auto" : "0px";
   }
 
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  button.addEventListener("click", () => {
     const shouldOpen = button.getAttribute("aria-expanded") !== "true";
     setAccordionState(button, shouldOpen);
   });
@@ -289,7 +258,7 @@ function buildMessage(values) {
   const companyLine = values.company ? `Empresa u organización: ${values.company}` : "Empresa u organización: No indicada";
 
   return [
-    "Hola Jesareko, quiero solicitar un diagnóstico técnico.",
+    "Hola Jesareko, quiero consultar por una revisión técnica.",
     "",
     `Nombre: ${values.name}`,
     companyLine,
@@ -327,7 +296,7 @@ function openEmail() {
     return;
   }
 
-  const subject = encodeURIComponent(`Solicitud de diagnóstico técnico - ${values.service}`);
+  const subject = encodeURIComponent(`Consulta técnica - ${values.service}`);
   const body = encodeURIComponent(buildMessage(values));
   const url = `mailto:${emailAddress}?subject=${subject}&body=${body}`;
   formStatus.textContent = "Abriendo el cliente de correo con el mensaje preparado.";
@@ -341,4 +310,75 @@ sendEmail.addEventListener("click", openEmail);
   const field = contactForm.elements[fieldName];
   field.addEventListener("input", () => setFieldError(fieldName, ""));
 });
+
+const canUseLiquidPointer = !window.matchMedia("(pointer: coarse)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (canUseLiquidPointer) {
+  const rootElement = document.documentElement;
+  const liquidTargets = ".site-header, .nav-menu, .nav-links a, .btn, .dashboard, .metric-card, .service-card, .case-card, .benefit-card, .tech-group, .security-solution-card, .security-usecase-card, .product-ref-card, .accordion-item, .contact-form, .final-cta__inner, .back-to-top";
+  let frame = 0;
+  let lastEvent = null;
+  let activeTargets = new Set();
+
+  function setLocalLight(target, event) {
+    const rect = target.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+
+    target.style.setProperty("--mx", `${x.toFixed(2)}%`);
+    target.style.setProperty("--my", `${y.toFixed(2)}%`);
+  }
+
+  function updateLiquidPointer() {
+    frame = 0;
+    if (!lastEvent) return;
+
+    const xPercent = (lastEvent.clientX / window.innerWidth) * 100;
+    const yPercent = (lastEvent.clientY / window.innerHeight) * 100;
+
+    document.body.classList.add("has-pointer-glow");
+    rootElement.style.setProperty("--page-mx-px", `${lastEvent.clientX}px`);
+    rootElement.style.setProperty("--page-my-px", `${lastEvent.clientY}px`);
+    rootElement.style.setProperty("--page-mx", `${xPercent.toFixed(2)}%`);
+    rootElement.style.setProperty("--page-my", `${yPercent.toFixed(2)}%`);
+
+    const target = lastEvent.target.closest(liquidTargets);
+    const nextTargets = new Set();
+
+    if (target) {
+      nextTargets.add(target);
+      [".dashboard", ".accordion-item", ".contact-form", ".final-cta__inner"].forEach((selector) => {
+        const parent = target.closest(selector);
+        if (parent) nextTargets.add(parent);
+      });
+    }
+
+    activeTargets.forEach((activeTarget) => {
+      if (!nextTargets.has(activeTarget)) {
+        activeTarget.style.removeProperty("--mx");
+        activeTarget.style.removeProperty("--my");
+      }
+    });
+
+    nextTargets.forEach((activeTarget) => setLocalLight(activeTarget, lastEvent));
+    activeTargets = nextTargets;
+  }
+
+  document.addEventListener("pointermove", (event) => {
+    lastEvent = event;
+    if (!frame) frame = window.requestAnimationFrame(updateLiquidPointer);
+  }, { passive: true });
+
+  document.addEventListener("pointerleave", () => {
+    document.body.classList.remove("has-pointer-glow");
+    activeTargets.forEach((activeTarget) => {
+      activeTarget.style.removeProperty("--mx");
+      activeTarget.style.removeProperty("--my");
+    });
+    activeTargets = new Set();
+    lastEvent = null;
+  });
+}
 
