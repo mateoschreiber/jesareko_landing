@@ -1,25 +1,26 @@
 :root {
   --bg-dark: #092318;
   --bg-section: #ffffff;
-  --bg-section-soft: #f7faf8;
+  --bg-section-soft: #f2f5f0;
   --surface: #ffffff;
-  --surface-soft: #f7faf8;
-  --surface-muted: #eef5f0;
+  --surface-soft: #f6f8f4;
+  --surface-muted: #eef1eb;
   --surface-2: var(--surface-muted);
   --text-light: #f8fff9;
-  --text-muted-light: #d6e3dc;
-  --text-dark: #10241a;
-  --text-muted-dark: #465a50;
+  --text-muted-light: #c4d4cb;
+  --text-dark: #0e1f16;
+  --text-muted-dark: #3d5046;
   --accent: #0F6B3F;
-  --accent-dark: #0B4F31;
-  --accent-soft: #E8F3EC;
-  --accent-line: #B8D8C4;
+  --accent-dark: #0A4529;
+  --accent-soft: #E3F0E8;
+  --accent-line: #B0D0BC;
   --whatsapp: #25d366;
   --border-light: rgba(255, 255, 255, 0.14);
-  --border-dark: rgba(15, 107, 63, 0.12);
-  --shadow: 0 8px 18px rgba(15, 107, 63, 0.08);
-  --shadow-soft: 0 4px 12px rgba(15, 107, 63, 0.06);
-  --radius: 0;
+  --border-dark: rgba(15, 107, 63, 0.10);
+  --shadow: 0 2px 8px rgba(15, 107, 63, 0.07);
+  --shadow-soft: 0 1px 3px rgba(15, 107, 63, 0.05);
+  --shadow-hover: 0 4px 16px rgba(15, 107, 63, 0.10);
+  --radius: 6px;
   --container: 1180px;
 }
 
@@ -29,14 +30,15 @@
 
 html {
   scroll-behavior: smooth;
+  background: #f7f8f5;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--surface);
+  background: #f7f8f5;
   color: var(--text-dark);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.7;
 }
@@ -92,7 +94,7 @@ textarea {
 }
 
 .section {
-  padding: 72px 0;
+  padding: 80px 0;
   background: var(--bg-section);
   color: var(--text-dark);
 }
@@ -110,15 +112,16 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.94);
+  width: 100%;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid rgba(15, 107, 63, 0.12);
-  backdrop-filter: blur(10px);
-  transition: box-shadow 0.2s ease, background 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .site-header.is-scrolled {
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 18px rgba(15, 107, 63, 0.08);
+  box-shadow: 0 2px 12px rgba(15, 107, 63, 0.08);
 }
 
 .navbar {
@@ -284,12 +287,8 @@ textarea {
   min-height: 680px;
   display: flex;
   align-items: center;
-  padding: 92px 0 84px;
-  background:
-    linear-gradient(90deg, rgba(15, 107, 63, 0.055) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(15, 107, 63, 0.05) 1px, transparent 1px),
-    var(--surface);
-  background-size: 46px 46px, 46px 46px, auto;
+  padding: 96px 0 84px;
+  background: var(--surface-soft);
   border-bottom: 1px solid var(--accent-line);
 }
 
@@ -330,8 +329,8 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "Georgia", "Times New Roman", serif;
-  letter-spacing: 0;
+  font-family: "Merriweather", "Georgia", "Times New Roman", serif;
+  letter-spacing: -0.01em;
   overflow-wrap: anywhere;
 }
 
@@ -680,7 +679,7 @@ p {
 .tech-grid,
 .timeline {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: stretch;
 }
 
@@ -721,7 +720,7 @@ p {
 .security-usecases__grid,
 .product-ref-grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .security-solutions-grid {
@@ -1168,12 +1167,12 @@ textarea.is-invalid {
 
 @media (max-width: 1024px) {
   .section {
-    padding: 60px 0;
+    padding: 56px 0;
   }
 
   .hero {
     min-height: auto;
-    padding: 84px 0 72px;
+    padding: 84px 0 68px;
   }
 
   .hero__grid,
@@ -1185,11 +1184,26 @@ textarea.is-invalid {
 .benefit-grid,
 .case-grid,
 .timeline,
-.tech-grid,
 .security-solutions-grid,
-.security-usecases__grid,
 .product-ref-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pain-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .security-usecases__grid,
+.tech-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .final-cta__inner {
+    align-items: flex-start;
+  }
+
+  .final-cta__actions {
+    justify-content: flex-start;
   }
 }
 
@@ -1251,6 +1265,33 @@ textarea.is-invalid {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .pain-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .security-usecases__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta__inner {
+    padding: 1.25rem;
+    border-radius: 0;
+  }
+
+  .final-cta__actions,
+.final-cta__actions .btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .site-footer {
+    padding-top: 1.75rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1259,7 +1300,7 @@ textarea.is-invalid {
   }
 
   .section {
-    padding: 46px 0;
+    padding: 52px 0;
   }
 
   .navbar {
@@ -1505,7 +1546,7 @@ textarea.is-invalid {
 .accordion__panel-inner .tech-grid,
 .accordion__panel-inner .timeline,
 .accordion__panel-inner .pain-grid {
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .accordion__panel-inner .service-card,
@@ -1514,7 +1555,7 @@ textarea.is-invalid {
 .accordion__panel-inner .tech-group,
 .accordion__panel-inner .timeline-item,
 .accordion__panel-inner .pain-card {
-  padding: 1.15rem;
+  padding: 1.35rem;
 }
 
 @media (max-width: 1024px) {
@@ -1630,17 +1671,6 @@ body {
   background: var(--surface);
   border: 1px solid rgba(15, 107, 63, 0.10);
   box-shadow: 0 1px 4px rgba(15, 107, 63, 0.06);
-}
-
-.site-header {
-  top: 0;
-  width: 100%;
-  border-radius: 0;
-}
-
-.site-header.is-scrolled {
-  box-shadow: 0 4px 12px rgba(15, 107, 63, 0.10);
-  background: rgba(255, 255, 255, 0.98);
 }
 
 .navbar {
@@ -1799,15 +1829,6 @@ body {
   color: var(--accent-dark);
   border-color: var(--accent-dark);
   box-shadow: 0 2px 8px rgba(15, 107, 63, 0.08);
-}
-
-.hero {
-  min-height: 680px;
-  isolation: isolate;
-  overflow: hidden;
-  padding-top: 96px;
-  border-bottom: 1px solid var(--accent-line);
-  background: var(--surface-soft);
 }
 
 .hero .badge,
@@ -2165,8 +2186,12 @@ main,
 .contact-form:focus-within,
 .final-cta__inner:focus-within,
 .accordion-item:focus-within {
-  border-color: rgba(15, 107, 63, 0.22);
-  box-shadow: 0 4px 12px rgba(15, 107, 63, 0.10);
+  border-color: rgba(15, 107, 63, 0.28);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn > *,
