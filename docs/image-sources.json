@@ -10,7 +10,6 @@
     {"file": "hikvision-alarm-kit.webp", "brand": "Hikvision", "status": "source_verification_required"},
     {"file": "hikvision-cctv-cameras-clean.png", "brand": "Hikvision", "status": "source_verification_required", "provenance": "user_provided_reference_background_cleaned"},
     {"file": "hikvision-cctv-cameras.webp", "brand": "Hikvision", "status": "source_verification_required"},
-    {"file": "hikvision-turbo-camera.webp", "brand": "Hikvision", "status": "source_verification_required"},
     {"file": "imou-pt-camera.webp", "brand": "Imou", "status": "source_verification_required"},
     {"file": "ubiquiti-network-equipment.webp", "brand": "Ubiquiti", "status": "source_verification_required"}
   ]
