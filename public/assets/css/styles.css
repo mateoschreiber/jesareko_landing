@@ -801,6 +801,21 @@ p {
   border-radius: 0;
 }
 
+.security-solution-card__media.media-tone-white,
+.product-ref-card__media.media-tone-white {
+  background: #fff;
+}
+
+.security-solution-card__media.media-tone-outdoor,
+.product-ref-card__media.media-tone-outdoor {
+  background: #798253;
+}
+
+.security-solution-card__media.media-tone-sky,
+.product-ref-card__media.media-tone-sky {
+  background: #b8c0d1;
+}
+
 .security-solution-card__media {
   margin: 0 0 0.9rem;
 }
@@ -2302,19 +2317,46 @@ main,
 
 /* Compact service cards: content drives height instead of the tallest card in the row. */
 .services-grid {
-  align-items: start;
+  align-items: stretch;
 }
 
 .service-card {
-  height: auto;
+  height: 29rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-line) transparent;
 }
 
 .service-card ul {
   margin-top: 0.35rem;
 }
 
+.service-card::-webkit-scrollbar {
+  width: 0.45rem;
+}
+
+.service-card::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--accent-line);
+}
+
+@media (min-width: 1025px) {
+  .hero {
+    min-height: auto;
+    align-items: flex-start;
+    padding: 64px 0 72px;
+  }
+}
+
 @media (max-width: 1200px) {
   .services-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .service-card {
+    height: auto;
+    overflow: visible;
   }
 }

@@ -1,9 +1,9 @@
 # README de seguridad
 
 ## Que se endurecio
-- Se preparo una Content Security Policy restrictiva para produccion, compatible con la landing estatica y Google Fonts.
+- Se preparó una Content Security Policy restrictiva para producción, compatible con los recursos locales y Cloudflare Web Analytics.
 - Se agregaron headers recomendados: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` y `Cross-Origin-Resource-Policy`.
-- Se movieron estilos inline del dashboard a clases CSS para evitar `unsafe-inline` en estilos.
+- Se eliminaron estilos inline para evitar `unsafe-inline` en estilos y se retiró `navigate-to`, directiva no soportada por navegadores actuales.
 - El formulario sigue siendo estatico, pero ahora normaliza texto, elimina caracteres de control, limita longitudes y construye WhatsApp/mailto con `encodeURIComponent`.
 - CSS y JavaScript tienen una sola fuente de verdad; la compresion se delega al CDN.
 - Se agregaron archivos de despliegue para Cloudflare Pages/Netlify, Nginx y Apache.
