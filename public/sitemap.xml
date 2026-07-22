@@ -2,32 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jesareko.com/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
-    <loc>https://jesareko.com/servicios.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://jesareko.com/servicios</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
-    <loc>https://jesareko.com/casos.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://jesareko.com/casos</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
-    <loc>https://jesareko.com/tecnologias.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://jesareko.com/tecnologias</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
-    <loc>https://jesareko.com/contacto.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://jesareko.com/contacto</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
   <url>
-    <loc>https://jesareko.com/privacidad.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://jesareko.com/privacidad</loc>
+    <lastmod>2026-07-22</lastmod>
   </url>
 </urlset>

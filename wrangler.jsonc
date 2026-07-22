@@ -6,6 +6,7 @@
     "enabled": false
   },
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "html_handling": "drop-trailing-slash"
   }
 }

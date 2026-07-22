@@ -6,14 +6,25 @@
 - Activar `Always Use HTTPS`.
 - Activar `Automatic HTTPS Rewrites`.
 - No exponer la IP de origen si se usa hosting propio. Si hay servidor propio, permitir trafico HTTP/HTTPS solo desde rangos IP oficiales de Cloudflare a nivel firewall.
+- Consolidar el host principal con un Bulk Redirect permanente:
+  - Origen: `www.jesareko.com`
+  - Destino: `https://jesareko.com`
+  - Estado: `301`
+  - Activar `Preserve query string`, `Subpath matching` y `Preserve path suffix`.
+- Verificar que `http://www.jesareko.com/*` también termine en `https://jesareko.com/*` sin cadenas de redirección.
 
 ## Rendimiento seguro
 - Activar `Brotli`.
 - Activar `Auto Minify` para HTML, CSS y JS si esta disponible en el plan.
 - Crear Cache Rules:
   - `/assets/*`: cache publico de 1 dia mientras los archivos mantengan nombres estables.
-  - `/`, `/index.html`, `/robots.txt`, `/sitemap.xml`: cache corto, por ejemplo 5 a 60 minutos.
-- Purgar cache despues de cambiar `index.html`, CSS, JS, `robots.txt` o `sitemap.xml`.
+  - `/`, `/servicios`, `/casos`, `/tecnologias`, `/contacto`, `/privacidad`, `/robots.txt`, `/sitemap.xml`: cache corto, por ejemplo 5 a 60 minutos.
+- Purgar cache despues de cambiar HTML, CSS, JS, `robots.txt` o `sitemap.xml`.
+
+## SEO tecnico
+- Mantener `assets.html_handling` en `drop-trailing-slash` para que las rutas canonicas sean `/servicios`, `/casos`, `/tecnologias`, `/contacto` y `/privacidad`.
+- No publicar canónicas, enlaces internos ni URLs del sitemap con extensión `.html`.
+- Después de desplegar, comprobar que las rutas `.html` respondan con redirección permanente y que el host `www` no entregue contenido con estado `200`.
 
 ## WAF y antiabuso
 - Activar WAF Managed Rules si el plan lo permite.

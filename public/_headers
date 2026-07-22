@@ -14,7 +14,22 @@
 /assets/*
   Cache-Control: public, max-age=86400, must-revalidate
 
-/*.html
+/
+  Cache-Control: public, max-age=300, must-revalidate
+
+/servicios
+  Cache-Control: public, max-age=300, must-revalidate
+
+/casos
+  Cache-Control: public, max-age=300, must-revalidate
+
+/tecnologias
+  Cache-Control: public, max-age=300, must-revalidate
+
+/contacto
+  Cache-Control: public, max-age=300, must-revalidate
+
+/privacidad
   Cache-Control: public, max-age=300, must-revalidate
 
 /robots.txt
