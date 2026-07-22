@@ -1,7 +1,7 @@
 # README de seguridad
 
 ## Que se endurecio
-- Se preparó una Content Security Policy restrictiva para producción, compatible con los recursos locales y Cloudflare Web Analytics.
+- Se preparó una Content Security Policy restrictiva para producción, limitada a recursos locales, y `Cache-Control: no-transform` para impedir la inyección automática del beacon de Cloudflare.
 - Se agregaron headers recomendados: CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy: same-origin` y `Cross-Origin-Resource-Policy`.
 - Se eliminaron estilos inline para evitar `unsafe-inline` en estilos y se retiró `navigate-to`, directiva no soportada por navegadores actuales.
 - El formulario sigue siendo estatico, pero ahora normaliza texto, elimina caracteres de control, limita longitudes y construye WhatsApp/mailto con `encodeURIComponent`.
@@ -24,6 +24,7 @@
 5. Configurar el dominio propio.
 6. Activar HTTPS y revisar que la landing cargue sin errores CSP en DevTools.
 7. Verificar `https://jesareko.com/`, WhatsApp, email, GitHub y la imagen Open Graph antes de publicar.
+8. Mantener `Cache-Control: no-transform` en `public/_headers`. Evita que Cloudflare inyecte `beacon.min.js` fuera de este repositorio, que los bloqueadores reportan como `ERR_BLOCKED_BY_CLIENT`.
 
 ## Despliegue detras de Cloudflare con hosting propio
 1. Servir el sitio con Nginx o Apache usando los ejemplos de `/deploy`.

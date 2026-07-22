@@ -113,9 +113,9 @@
             <small class="error-message" data-error-for="city"></small>
           </div>
 
-          <div class="form-field">
-            <label for="service">Servicio de interés *</label>
-            <select id="service" name="service" required>
+          <div class="form-field form-field--service">
+            <label id="serviceLabel" for="service">Servicio de interés *</label>
+            <select class="service-select-native" id="service" name="service" required>
               <option value="">Seleccione un servicio</option>
               <option value="Revisión técnica / diagnóstico">Revisión técnica / diagnóstico</option>
               <option value="Redes y WiFi">Redes y WiFi</option>
@@ -124,6 +124,20 @@
               <option value="Web, monitoreo y automatización">Web, monitoreo y automatización</option>
               <option value="Otro">Otro</option>
             </select>
+            <div class="service-picker" data-service-picker>
+              <button class="service-picker__trigger" type="button" data-service-trigger aria-labelledby="serviceLabel" aria-controls="serviceOptions" aria-expanded="false">
+                <span data-service-label>Seleccione un servicio</span>
+              </button>
+              <div class="service-picker__options" id="serviceOptions" data-service-options hidden>
+                <button class="service-picker__option" type="button" data-service-option data-value="">Seleccione un servicio</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="Revisión técnica / diagnóstico">Revisión técnica / diagnóstico</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="Redes y WiFi">Redes y WiFi</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="CCTV, alarmas, accesos e incendio">CCTV, alarmas, accesos e incendio</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="Soporte e infraestructura">Soporte e infraestructura</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="Web, monitoreo y automatización">Web, monitoreo y automatización</button>
+                <button class="service-picker__option" type="button" data-service-option data-value="Otro">Otro</button>
+              </div>
+            </div>
             <small class="error-message" data-error-for="service"></small>
           </div>
 
