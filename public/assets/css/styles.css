@@ -1520,6 +1520,10 @@ textarea.is-invalid {
   margin-bottom: 0.85rem;
 }
 
+.contact-copy .eyebrow {
+  margin-bottom: 0.85rem;
+}
+
 .section-heading h2 {
   max-width: 760px;
 }
