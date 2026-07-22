@@ -15,12 +15,12 @@ ServerSignature Off
   Header always set X-Frame-Options "DENY"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "accelerometer=(), autoplay=(), camera=(), clipboard-read=(), clipboard-write=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), web-share=(), xr-spatial-tracking=()"
-  Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Cross-Origin-Resource-Policy "same-origin"
   Header always set X-Permitted-Cross-Domain-Policies "none"
   Header always set X-Download-Options "noopen"
   Header always set X-XSS-Protection "0"
-  # Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+  Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>
 
 <IfModule mod_deflate.c>
@@ -45,9 +45,3 @@ ServerSignature Off
 <FilesMatch "\.(env|ini|log|bak|backup|old|orig|sql|sqlite|db|yml|yaml|toml|lock|config|conf|ps1|sh|bat|cmd)$">
   Require all denied
 </FilesMatch>
-
-<IfModule mod_rewrite.c>
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [L]
-</IfModule>

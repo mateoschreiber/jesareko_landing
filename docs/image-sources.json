@@ -1,83 +1,16 @@
-[
-  {
-    "file": "hikvision-ax-pro.webp",
-    "brand": "Hikvision",
-    "type": "product",
-    "source": "official product page",
-    "source_url": "https://www.hikvision.com/en/products/Alarm-Products/wireless-intrusion-alarm/ax-pro/",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Usar solo si se cuenta con permiso o condición comercial habilitante."
-  },
-  {
-    "file": "hikvision-access-control.webp",
-    "brand": "Hikvision",
-    "type": "product",
-    "source": "official product page",
-    "source_url": "https://www.hikvision.com/en/products/Access-Control-Products/",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Usar solo si se cuenta con permiso o condición comercial habilitante."
-  },
-  {
-    "file": "dahua-dmss.webp",
-    "brand": "Dahua",
-    "type": "software",
-    "source": "official app page",
-    "source_url": "https://play.google.com/store/apps/details?id=com.mm.android.DMSS",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y versión disponible antes de publicar."
-  },
-  {
-    "file": "dahua-access-control.webp",
-    "brand": "Dahua",
-    "type": "product",
-    "source": "official product page",
-    "source_url": "https://www.dahuasecurity.com/la/products",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y línea exacta antes de publicar."
-  },
-  {
-    "file": "dahua-fire-alarm.webp",
-    "brand": "Dahua",
-    "type": "product",
-    "source": "official product page",
-    "source_url": "https://www.dahuasecurity.com/la/products",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y línea exacta antes de publicar."
-  },
-  {
-    "file": "ezviz-camera.webp",
-    "brand": "EZVIZ",
-    "type": "product",
-    "source": "official category page",
-    "source_url": "https://www.ezviz.com/category/security-wifi-cameras",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y modelo exacto antes de publicar."
-  },
-  {
-    "file": "ezviz-app.webp",
-    "brand": "EZVIZ",
-    "type": "software",
-    "source": "official app page",
-    "source_url": "https://play.google.com/store/apps/details?id=com.ezviz",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y versión disponible antes de publicar."
-  },
-  {
-    "file": "imou-camera-sensor.webp",
-    "brand": "Imou",
-    "type": "product",
-    "source": "official site",
-    "source_url": "https://www.imou.com/la",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y línea exacta antes de publicar."
-  },
-  {
-    "file": "imou-life.webp",
-    "brand": "Imou",
-    "type": "software",
-    "source": "official download page",
-    "source_url": "https://www.imou.com/la/support/download",
-    "asset_status": "pending_manual_asset",
-    "usage_note": "Imagen referencial. Verificar permiso y versión disponible antes de publicar."
-  }
-]
+{
+  "purpose": "Registro de activos visuales publicados en public/assets/img/brands.",
+  "policy": "No sustituye licencias ni autorizaciones comerciales. Verificar la procedencia y el permiso de cada activo antes de una campaña o redistribución.",
+  "assets": [
+    {"file": "biometric-access-terminal.webp", "brand": "Sin confirmar", "status": "source_verification_required"},
+    {"file": "dahua-access-terminal.webp", "brand": "Dahua", "status": "source_verification_required"},
+    {"file": "dahua-video-surveillance.webp", "brand": "Dahua", "status": "source_verification_required"},
+    {"file": "ezviz-cs8-camera.webp", "brand": "EZVIZ", "status": "source_verification_required"},
+    {"file": "fire-alarm-system-kit.webp", "brand": "Sin confirmar", "status": "source_verification_required"},
+    {"file": "hikvision-alarm-kit.webp", "brand": "Hikvision", "status": "source_verification_required"},
+    {"file": "hikvision-cctv-cameras.webp", "brand": "Hikvision", "status": "source_verification_required"},
+    {"file": "hikvision-turbo-camera.webp", "brand": "Hikvision", "status": "source_verification_required"},
+    {"file": "imou-pt-camera.webp", "brand": "Imou", "status": "source_verification_required"},
+    {"file": "ubiquiti-network-equipment.webp", "brand": "Ubiquiti", "status": "source_verification_required"}
+  ]
+}

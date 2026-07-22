@@ -2,10 +2,11 @@
 
 ## Que se endurecio
 - Se preparó una Content Security Policy restrictiva para producción, compatible con los recursos locales y Cloudflare Web Analytics.
-- Se agregaron headers recomendados: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` y `Cross-Origin-Resource-Policy`.
+- Se agregaron headers recomendados: CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy: same-origin` y `Cross-Origin-Resource-Policy`.
 - Se eliminaron estilos inline para evitar `unsafe-inline` en estilos y se retiró `navigate-to`, directiva no soportada por navegadores actuales.
 - El formulario sigue siendo estatico, pero ahora normaliza texto, elimina caracteres de control, limita longitudes y construye WhatsApp/mailto con `encodeURIComponent`.
 - CSS y JavaScript tienen una sola fuente de verdad; la compresion se delega al CDN.
+- Las configuraciones alternativas de Nginx y Apache fuerzan HTTPS, limitan TLS a 1.2/1.3 y devuelven `404` para rutas inexistentes.
 - Se agregaron archivos de despliegue para Cloudflare Pages/Netlify, Nginx y Apache.
 - Se agregaron `robots.txt`, `sitemap.xml` y `.gitignore`.
 

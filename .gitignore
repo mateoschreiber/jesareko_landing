@@ -1,18 +1,31 @@
+# Environment and deployment state
 .env
 *.env
-*.log
+.dev.vars*
+!.dev.vars.example
+!.env.example
+.wrangler/
+
+# Dependencies and generated output
 node_modules/
 dist/
-.DS_Store
-Thumbs.db
+coverage/
+.cache/
+
+# Logs and temporary files
+*.log
 *.tmp
 *.temp
 *.swp
 *.swo
 ~$*
 
-# wrangler files
-.wrangler
-.dev.vars*
-!.dev.vars.example
-!.env.example
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local Codex workspace state
+.agents/
+.codex/

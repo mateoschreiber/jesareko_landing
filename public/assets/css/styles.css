@@ -2282,7 +2282,7 @@ main,
   }
 }
 
-/* Equal-height cards without nested scrolling. */
+/* Equal-height cards sized by the longest item in each responsive row. */
 .services-grid {
   align-items: stretch;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
@@ -2290,7 +2290,7 @@ main,
 }
 
 .service-card {
-  height: 40rem;
+  height: 100%;
   overflow: visible;
   padding: 1.5rem;
 }
