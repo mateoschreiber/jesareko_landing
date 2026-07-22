@@ -128,7 +128,11 @@
               <button class="service-picker__trigger" type="button" data-service-trigger aria-labelledby="serviceLabel" aria-controls="serviceOptions" aria-expanded="false">
                 <span data-service-label>Seleccione un servicio</span>
               </button>
-              <div class="service-picker__options" id="serviceOptions" data-service-options hidden>
+              <dialog class="service-picker__options" id="serviceOptions" data-service-options aria-labelledby="serviceOptionsTitle">
+                <div class="service-picker__header">
+                  <h2 id="serviceOptionsTitle">Servicio de interés</h2>
+                  <button class="service-picker__close" type="button" data-service-close aria-label="Cerrar selector">×</button>
+                </div>
                 <button class="service-picker__option" type="button" data-service-option data-value="">Seleccione un servicio</button>
                 <button class="service-picker__option" type="button" data-service-option data-value="Revisión técnica / diagnóstico">Revisión técnica / diagnóstico</button>
                 <button class="service-picker__option" type="button" data-service-option data-value="Redes y WiFi">Redes y WiFi</button>
@@ -136,7 +140,7 @@
                 <button class="service-picker__option" type="button" data-service-option data-value="Soporte e infraestructura">Soporte e infraestructura</button>
                 <button class="service-picker__option" type="button" data-service-option data-value="Web, monitoreo y automatización">Web, monitoreo y automatización</button>
                 <button class="service-picker__option" type="button" data-service-option data-value="Otro">Otro</button>
-              </div>
+              </dialog>
             </div>
             <small class="error-message" data-error-for="service"></small>
           </div>

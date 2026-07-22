@@ -2431,15 +2431,51 @@ main > .section:first-child:not(.hero) {
 }
 
 .service-picker__options {
-  margin-top: 0.35rem;
-  width: 100%;
-  max-height: min(19rem, 52dvh);
-  padding: 0.35rem;
+  width: min(calc(100% - 2rem), 26rem);
+  max-height: min(34rem, calc(100dvh - 2rem));
+  margin: auto;
+  padding: 0.55rem;
   overflow-y: auto;
   border: 1px solid rgba(15, 107, 63, 0.22);
   border-radius: 6px;
   background: var(--surface);
   box-shadow: var(--shadow-hover);
+}
+
+.service-picker__options::backdrop {
+  background: rgba(11, 31, 23, 0.28);
+}
+
+.service-picker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0.2rem 0.55rem;
+}
+
+.service-picker__header h2 {
+  margin: 0;
+  font: inherit;
+  font-weight: 800;
+}
+
+.service-picker__close {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.service-picker__close:hover,
+.service-picker__close:focus-visible {
+  background: var(--accent-soft);
+  color: var(--accent-dark);
 }
 
 .service-picker__option {
@@ -2464,8 +2500,9 @@ main > .section:first-child:not(.hero) {
   }
 
   .service-picker__options {
-    max-height: min(52dvh, 22rem);
-    padding: 0.5rem;
+    width: min(calc(100% - 1.5rem), 26rem);
+    max-height: min(34rem, calc(100dvh - 1.5rem));
+    padding: 0.55rem;
   }
 
   .service-picker__option {

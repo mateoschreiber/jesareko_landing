@@ -93,6 +93,8 @@ if (contactForm) {
   const serviceLabel = servicePicker?.querySelector("[data-service-label]");
   const serviceOptions = servicePicker?.querySelector("[data-service-options]");
   const serviceOptionButtons = [...(servicePicker?.querySelectorAll("[data-service-option]") || [])];
+  const servicePickerEnabled = Boolean(servicePicker && serviceSelect && serviceTrigger && serviceOptions && typeof serviceOptions.showModal === "function");
+  const serviceControl = servicePickerEnabled ? serviceTrigger : serviceSelect;
   const normalize = (value, limit, multiline = false) => String(value || "")
     .normalize("NFC")
     .replace(multiline ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, "")
@@ -100,10 +102,10 @@ if (contactForm) {
     .split("\n").map((line) => line.replace(/[ \t]+/g, " ").trim()).join("\n").trim().slice(0, limit);
 
   function closeServicePicker(returnFocus = false) {
-    if (!servicePicker || !serviceTrigger || !serviceOptions) return;
+    if (!servicePickerEnabled) return;
     servicePicker.classList.remove("is-open");
     serviceTrigger.setAttribute("aria-expanded", "false");
-    serviceOptions.hidden = true;
+    if (serviceOptions.open) serviceOptions.close();
     if (returnFocus) serviceTrigger.focus();
   }
 
@@ -116,16 +118,16 @@ if (contactForm) {
   }
 
   function openServicePicker(focusOption = false) {
-    if (!servicePicker || !serviceTrigger || !serviceOptions) return;
+    if (!servicePickerEnabled) return;
     servicePicker.classList.add("is-open");
     serviceTrigger.setAttribute("aria-expanded", "true");
-    serviceOptions.hidden = false;
+    if (!serviceOptions.open) serviceOptions.showModal();
     if (focusOption) (serviceOptionButtons.find((option) => option.dataset.value === serviceSelect.value) || serviceOptionButtons[0])?.focus();
   }
 
   function clearFieldError(fieldName) {
     const field = contactForm.elements[fieldName];
-    const control = fieldName === "service" ? serviceTrigger : field;
+    const control = fieldName === "service" ? serviceControl : field;
     field?.classList.remove("is-invalid");
     field?.setAttribute("aria-invalid", "false");
     control?.classList.remove("is-invalid");
@@ -133,7 +135,7 @@ if (contactForm) {
     contactForm.querySelector(`[data-error-for="${fieldName}"]`)?.replaceChildren();
   }
 
-  if (servicePicker && serviceSelect && serviceTrigger && serviceOptions) {
+  if (servicePickerEnabled) {
     serviceSelect.setAttribute("tabindex", "-1");
     serviceSelect.setAttribute("aria-hidden", "true");
     updateServicePicker(serviceSelect.value);
@@ -171,9 +173,18 @@ if (contactForm) {
     });
 
     serviceSelect.addEventListener("change", () => updateServicePicker(serviceSelect.value));
-    document.addEventListener("click", (event) => {
-      if (!servicePicker.contains(event.target)) closeServicePicker();
+    serviceOptions.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeServicePicker(true);
     });
+    serviceOptions.addEventListener("click", (event) => {
+      if (event.target === serviceOptions) closeServicePicker(true);
+    });
+    servicePicker.querySelector("[data-service-close]")?.addEventListener("click", () => {
+      closeServicePicker(true);
+    });
+  } else {
+    document.documentElement.classList.remove("has-js");
   }
 
   function values() {
@@ -197,7 +208,7 @@ if (contactForm) {
     };
     for (const [fieldName, message] of Object.entries(errors)) {
       const field = contactForm.elements[fieldName];
-      const control = fieldName === "service" ? serviceTrigger : field;
+      const control = fieldName === "service" ? serviceControl : field;
       const error = contactForm.querySelector(`[data-error-for="${fieldName}"]`);
       field.classList.toggle("is-invalid", Boolean(message));
       field.setAttribute("aria-invalid", String(Boolean(message)));
@@ -207,7 +218,7 @@ if (contactForm) {
     }
     const invalid = Object.keys(errors).find((fieldName) => errors[fieldName]);
     if (invalid) {
-      (invalid === "service" ? serviceTrigger : contactForm.elements[invalid]).focus();
+      (invalid === "service" ? serviceControl : contactForm.elements[invalid]).focus();
       formStatus.textContent = "Revise los campos marcados antes de enviar.";
       return null;
     }
