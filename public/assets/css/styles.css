@@ -1759,8 +1759,7 @@ body {
 }
 
 .brand__logo,
-.footer-logo img,
-.hero-logo img {
+.footer-logo img {
   display: block;
   flex: 0 0 auto;
   border-radius: 8px;
@@ -1775,34 +1774,6 @@ body {
 .brand__name {
   color: var(--accent-dark);
   letter-spacing: 0;
-}
-
-.hero-logo {
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
-  border: 1px solid rgba(15, 107, 63, 0.12);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: 0 1px 4px rgba(15, 107, 63, 0.06);
-  color: var(--accent-dark);
-  font-weight: 800;
-}
-
-.hero-logo img {
-  width: clamp(64px, 7vw, 84px);
-  height: clamp(64px, 7vw, 84px);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(15, 107, 63, 0.10);
-}
-
-.hero-logo span {
-  padding-right: 0.35rem;
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
-  line-height: 1;
 }
 
 .footer-logo {
@@ -2174,10 +2145,6 @@ textarea.is-invalid {
     border-radius: 4px;
   }
 
-  .hero-logo {
-    gap: 0.65rem;
-    padding: 0.45rem 0.7rem 0.45rem 0.45rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2315,29 +2282,21 @@ main,
   }
 }
 
-/* Compact service cards: content drives height instead of the tallest card in the row. */
+/* Equal-height cards without nested scrolling. */
 .services-grid {
   align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1.5rem;
 }
 
 .service-card {
-  height: 29rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-line) transparent;
+  height: 40rem;
+  overflow: visible;
+  padding: 1.5rem;
 }
 
 .service-card ul {
   margin-top: 0.35rem;
-}
-
-.service-card::-webkit-scrollbar {
-  width: 0.45rem;
-}
-
-.service-card::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: var(--accent-line);
 }
 
 @media (min-width: 1025px) {
@@ -2348,16 +2307,11 @@ main,
   }
 }
 
-@media (max-width: 1200px) {
-  .services-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 640px) {
   .service-card {
     height: auto;
     overflow: visible;
+    padding: 1.25rem;
   }
 }
 
@@ -2376,22 +2330,6 @@ svg[hidden] {
 .brand__logo {
   width: 32px;
   height: 32px;
-}
-
-.hero-logo {
-  gap: 0.65rem;
-  margin-bottom: 0.75rem;
-  padding: 0.35rem 0.6rem 0.35rem 0.35rem;
-}
-
-.hero-logo img {
-  width: 48px;
-  height: 48px;
-}
-
-.hero-logo span {
-  padding-right: 0.15rem;
-  font-size: 1rem;
 }
 
 .footer-logo img {
