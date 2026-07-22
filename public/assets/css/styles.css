@@ -2431,12 +2431,9 @@ main > .section:first-child:not(.hero) {
 }
 
 .service-picker__options {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + 0.35rem);
-  left: 0;
+  margin-top: 0.35rem;
   width: 100%;
-  max-height: min(19rem, calc(100dvh - 8rem));
+  max-height: min(19rem, 52dvh);
   padding: 0.35rem;
   overflow-y: auto;
   border: 1px solid rgba(15, 107, 63, 0.22);
@@ -2467,14 +2464,7 @@ main > .section:first-child:not(.hero) {
   }
 
   .service-picker__options {
-    position: fixed;
-    z-index: 150;
-    top: auto;
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    left: max(1rem, env(safe-area-inset-left));
-    width: auto;
-    max-height: min(58dvh, 28rem);
+    max-height: min(52dvh, 22rem);
     padding: 0.5rem;
   }
 
