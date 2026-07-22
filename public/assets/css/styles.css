@@ -144,7 +144,7 @@ textarea {
 }
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 100;
   width: 100%;
@@ -385,6 +385,10 @@ h2 {
   font-size: clamp(1.8rem, 3vw, 3rem);
   line-height: 1.14;
   font-weight: 800;
+}
+
+main {
+  padding-top: 72px;
 }
 
 .section-heading h1,
@@ -726,6 +730,10 @@ p {
   align-items: stretch;
 }
 
+.services-grid {
+  align-items: start;
+}
+
 .pain-grid,
 .benefit-grid,
 .services-grid,
@@ -913,7 +921,7 @@ p {
 }
 
 .service-card {
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -967,7 +975,7 @@ p {
 }
 
 .service-card ul {
-  margin: auto 0 0;
+  margin: 0.35rem 0 0;
   padding-left: 1.1rem;
 }
 
@@ -1250,6 +1258,12 @@ textarea.is-invalid {
   }
 }
 
+@media (max-width: 1200px) {
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 860px) {
   .nav-toggle {
     display: inline-flex;
@@ -1348,6 +1362,10 @@ textarea.is-invalid {
 
   .navbar {
     min-height: 72px;
+  }
+
+  main {
+    padding-top: 72px;
   }
 
   .brand {
@@ -2279,5 +2297,24 @@ main,
   .accordion__label {
     font-size: 1.25rem;
     font-weight: 800;
+  }
+}
+
+/* Compact service cards: content drives height instead of the tallest card in the row. */
+.services-grid {
+  align-items: start;
+}
+
+.service-card {
+  height: auto;
+}
+
+.service-card ul {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 1200px) {
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
