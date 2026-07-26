@@ -201,3 +201,30 @@ class ContentContractTests(unittest.TestCase):
         page = parsed_html("servicios.html")
         index = next(nav for nav in page.find_all("nav") if nav.attrs.get("aria-label") == "Rutas de servicio")
         self.assertIsNone(index.ancestor(class_name="container"))
+
+    def test_cases_are_honestly_labeled(self):
+        source = html("casos.html")
+        page = parsed_html("casos.html")
+        studies = page.find_all("article", "case-study")
+
+        self.assertIn("Aplicaciones frecuentes", source)
+        self.assertEqual(len(studies), 3)
+        self.assertIn("escenarios de trabajo", source.lower())
+        for study in studies:
+            with self.subTest(case=study.text()):
+                self.assertEqual(len(study.children("div", "case-study__media")), 1)
+                bodies = study.children("div", "case-study__body")
+                self.assertEqual(len(bodies), 1)
+                body = bodies[0].text()
+                for label in ("Situación", "Criterio", "Intervención"):
+                    self.assertIn(label, body)
+
+        for invented_proof in ("Resultado:", "%", "cliente:", "caso real"):
+            with self.subTest(invented_proof=invented_proof):
+                self.assertNotIn(invented_proof.lower(), source.lower())
+
+    def test_cases_components_have_focused_styles(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        for selector in (".case-study", ".case-study__media", ".case-study__body"):
+            with self.subTest(selector=selector):
+                self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
