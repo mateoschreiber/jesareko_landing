@@ -88,11 +88,6 @@ accordionButtons.forEach((button, index) => {
 if (contactForm) {
   const formStatus = document.getElementById("formStatus");
   const serviceSelect = contactForm.elements.service;
-  const serviceAliases = new Map([
-    ["redes", "Redes y WiFi"],
-    ["seguridad", "CCTV, alarmas, accesos e incendio"],
-    ["soporte", "Soporte e infraestructura"]
-  ]);
   const normalize = (value, limit, multiline = false) => String(value || "")
     .normalize("NFC")
     .replace(multiline ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, "")
@@ -182,7 +177,5 @@ if (contactForm) {
   const requestedService = new URLSearchParams(window.location.search).get("servicio");
   if (requestedService && ALLOWED_SERVICES.has(requestedService)) {
     serviceSelect.value = requestedService;
-  } else if (requestedService && serviceAliases.has(requestedService)) {
-    serviceSelect.value = serviceAliases.get(requestedService);
   }
 }

@@ -2,6 +2,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import re
 import unittest
+from urllib.parse import unquote
 
 PUBLIC = Path(__file__).resolve().parents[1] / "public"
 STYLES = PUBLIC / "assets" / "css" / "styles.css"
@@ -104,7 +105,10 @@ class ContentContractTests(unittest.TestCase):
         self.assertIn('class="contact-primary ', source)
         self.assertLess(source.index('class="contact-primary '), source.index('id="contactForm"'))
         self.assertLess(source.index('id="sendWhatsApp"'), source.index('id="sendEmail"'))
-        self.assertIn("+595 971 141 032", source)
+        phone_links = [link for link in page.find_all("a", "contact-phone") if link.attrs.get("href") == "tel:+595971141032"]
+        self.assertEqual(len(phone_links), 1)
+        phone = phone_links[0]
+        self.assertEqual(phone.text(), "+595 971 141 032")
         for field in ("name", "city", "service", "message"):
             with self.subTest(field=field):
                 control = next(node for node in form.find_all() if node.attrs.get("id") == field)
@@ -119,11 +123,45 @@ class ContentContractTests(unittest.TestCase):
 
     def test_contact_script_initializes_service_safely_and_links_errors(self):
         script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
-        self.assertIn('new URLSearchParams(window.location.search).get("servicio")', script)
-        self.assertIn("ALLOWED_SERVICES.has(requestedService)", script)
+        initialization = re.search(
+            r'const requestedService = new URLSearchParams\(window\.location\.search\)\.get\("servicio"\);\s*'
+            r'if \(requestedService && ALLOWED_SERVICES\.has\(requestedService\)\) \{\s*'
+            r'serviceSelect\.value = requestedService;\s*\}',
+            script,
+        )
+        self.assertIsNotNone(initialization)
+        self.assertNotIn("serviceAliases", script)
+        self.assertEqual(script.count("serviceSelect.value ="), 1)
+
+        cleanup = re.search(r"function clearFieldError\(fieldName\) \{(?P<body>.*?)\n  \}\n\n  function values", script, re.S)
+        self.assertIsNotNone(cleanup)
+        cleanup_body = cleanup.group("body")
+        self.assertIn('removeAttribute("aria-invalid")', cleanup_body)
+        self.assertIn('removeAttribute("aria-describedby")', cleanup_body)
         self.assertIn('setAttribute("aria-describedby", error.id)', script)
-        self.assertIn('removeAttribute("aria-invalid")', script)
-        self.assertIn('removeAttribute("aria-describedby")', script)
+
+    def test_contact_service_queries_are_limited_to_allowed_select_values(self):
+        allowed = {
+            "Revisión técnica / diagnóstico",
+            "Redes y WiFi",
+            "CCTV, alarmas, accesos e incendio",
+            "Soporte e infraestructura",
+            "Web, monitoreo y automatización",
+            "Otro",
+        }
+        values = []
+        for page in PUBLIC.glob("*.html"):
+            values.extend(unquote(value) for value in re.findall(r'href="[^"]*\?servicio=([^"&]+)', page.read_text(encoding="utf-8")))
+
+        self.assertTrue(values)
+        self.assertTrue(set(values).issubset(allowed), set(values) - allowed)
+
+    def test_contact_phone_has_a_full_touch_target(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        rule = re.search(r"(?s)\.contact-phone\s*\{(?P<body>[^}]*)\}", styles)
+        self.assertIsNotNone(rule)
+        self.assertRegex(rule.group("body"), r"display:\s*inline-flex;")
+        self.assertRegex(rule.group("body"), r"min-height:\s*3rem;")
 
     def test_homepage_follows_approved_narrative(self):
         source = html("index.html")
@@ -174,6 +212,11 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "seguridad", "soporte"])
         self.assertLess(source.index('aria-label="Rutas de servicio"'), source.index('id="redes"'))
 
+        contact_services = {
+            "redes": "Redes%20y%20WiFi",
+            "seguridad": "CCTV%2C%20alarmas%2C%20accesos%20e%20incendio",
+            "soporte": "Soporte%20e%20infraestructura",
+        }
         for detail in details:
             service = detail.attrs["id"]
             with self.subTest(service=service):
@@ -199,7 +242,7 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue(any(note.text().lower().startswith("criterio t") for note in notes))
                 contextual_links = [link for link in scope.children("a") if link.text() == "Consultar este servicio"]
                 self.assertEqual(len(contextual_links), 1)
-                self.assertEqual(contextual_links[0].attrs.get("href"), f"/contacto?servicio={service}")
+                self.assertEqual(contextual_links[0].attrs.get("href"), f"/contacto?servicio={contact_services[service]}")
 
         secondary_notes = page.find_all("p", "service-detail__note--secondary")
         self.assertEqual(len(secondary_notes), 1)
