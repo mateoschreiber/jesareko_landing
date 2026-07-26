@@ -96,6 +96,35 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(page=page):
                 self.assertIn("https://wa.me/595971141032", html(page))
 
+    def test_contact_prioritizes_whatsapp_and_has_accessible_errors(self):
+        source = html("contacto.html")
+        page = parsed_html("contacto.html")
+        form = next(node for node in page.find_all("form") if node.attrs.get("id") == "contactForm")
+
+        self.assertIn('class="contact-primary ', source)
+        self.assertLess(source.index('class="contact-primary '), source.index('id="contactForm"'))
+        self.assertLess(source.index('id="sendWhatsApp"'), source.index('id="sendEmail"'))
+        self.assertIn("+595 971 141 032", source)
+        for field in ("name", "city", "service", "message"):
+            with self.subTest(field=field):
+                control = next(node for node in form.find_all() if node.attrs.get("id") == field)
+                label = next(node for node in form.find_all("label") if node.attrs.get("for") == field)
+                error = next(node for node in form.find_all() if node.attrs.get("data-error-for") == field)
+                self.assertTrue(label.text())
+                self.assertEqual(error.attrs.get("id"), f"{field}Error")
+                self.assertEqual(control.attrs.get("aria-describedby"), None)
+        status = next(node for node in form.find_all() if node.attrs.get("id") == "formStatus")
+        self.assertEqual(status.attrs.get("role"), "status")
+        self.assertEqual(status.attrs.get("aria-live"), "polite")
+
+    def test_contact_script_initializes_service_safely_and_links_errors(self):
+        script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        self.assertIn('new URLSearchParams(window.location.search).get("servicio")', script)
+        self.assertIn("ALLOWED_SERVICES.has(requestedService)", script)
+        self.assertIn('setAttribute("aria-describedby", error.id)', script)
+        self.assertIn('removeAttribute("aria-invalid")', script)
+        self.assertIn('removeAttribute("aria-describedby")', script)
+
     def test_homepage_follows_approved_narrative(self):
         source = html("index.html")
         positions = [source.index(f'id="{section}"') for section in ("hero", "areas", "evidence", "process", "cases", "diagnostic")]

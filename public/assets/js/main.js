@@ -88,7 +88,11 @@ accordionButtons.forEach((button, index) => {
 if (contactForm) {
   const formStatus = document.getElementById("formStatus");
   const serviceSelect = contactForm.elements.service;
-  const serviceControl = serviceSelect;
+  const serviceAliases = new Map([
+    ["redes", "Redes y WiFi"],
+    ["seguridad", "CCTV, alarmas, accesos e incendio"],
+    ["soporte", "Soporte e infraestructura"]
+  ]);
   const normalize = (value, limit, multiline = false) => String(value || "")
     .normalize("NFC")
     .replace(multiline ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, "")
@@ -96,12 +100,10 @@ if (contactForm) {
     .split("\n").map((line) => line.replace(/[ \t]+/g, " ").trim()).join("\n").trim().slice(0, limit);
 
   function clearFieldError(fieldName) {
-    const field = contactForm.elements[fieldName];
-    const control = fieldName === "service" ? serviceControl : field;
-    field?.classList.remove("is-invalid");
-    field?.setAttribute("aria-invalid", "false");
+    const control = contactForm.elements[fieldName];
     control?.classList.remove("is-invalid");
-    control?.setAttribute("aria-invalid", "false");
+    control?.removeAttribute("aria-invalid");
+    control?.removeAttribute("aria-describedby");
     contactForm.querySelector(`[data-error-for="${fieldName}"]`)?.replaceChildren();
   }
 
@@ -118,30 +120,37 @@ if (contactForm) {
 
   function validate() {
     const data = values();
-    const errors = {
-      name: data.name ? "" : "Indique su nombre para poder responder.",
-      city: data.city ? "" : "Indique la ciudad donde está la infraestructura.",
-      service: ALLOWED_SERVICES.has(data.service) ? "" : "Seleccione el servicio de interés.",
-      message: data.message ? "" : "Cuente brevemente qué necesita mejorar."
-    };
+    const errors = getErrors(data);
     for (const [fieldName, message] of Object.entries(errors)) {
-      const field = contactForm.elements[fieldName];
-      const control = fieldName === "service" ? serviceControl : field;
+      const control = contactForm.elements[fieldName];
       const error = contactForm.querySelector(`[data-error-for="${fieldName}"]`);
-      field.classList.toggle("is-invalid", Boolean(message));
-      field.setAttribute("aria-invalid", String(Boolean(message)));
-      control?.classList.toggle("is-invalid", Boolean(message));
-      control?.setAttribute("aria-invalid", String(Boolean(message)));
+      control.classList.toggle("is-invalid", Boolean(message));
+      if (message && error) {
+        control.setAttribute("aria-invalid", "true");
+        control.setAttribute("aria-describedby", error.id);
+      } else {
+        control.removeAttribute("aria-invalid");
+        control.removeAttribute("aria-describedby");
+      }
       if (error) error.textContent = message;
     }
     const invalid = Object.keys(errors).find((fieldName) => errors[fieldName]);
     if (invalid) {
-      (invalid === "service" ? serviceControl : contactForm.elements[invalid]).focus();
+      contactForm.elements[invalid].focus();
       formStatus.textContent = "Revise los campos marcados antes de enviar.";
       return null;
     }
     formStatus.textContent = "";
     return data;
+  }
+
+  function getErrors(data) {
+    return {
+      name: data.name ? "" : "Indique su nombre para poder responder.",
+      city: data.city ? "" : "Indique la ciudad donde está la infraestructura.",
+      service: ALLOWED_SERVICES.has(data.service) ? "" : "Seleccione el servicio de interés.",
+      message: data.message ? "" : "Cuente brevemente qué necesita mejorar."
+    };
   }
 
   function message(data) {
@@ -164,7 +173,16 @@ if (contactForm) {
 
   ["name", "company", "city", "service", "message"].forEach((fieldName) => {
     contactForm.elements[fieldName].addEventListener("input", () => {
-      clearFieldError(fieldName);
+      const error = fieldName === "company" ? "" : getErrors(values())[fieldName];
+      if (!error) clearFieldError(fieldName);
+      if (![...contactForm.querySelectorAll('[aria-invalid="true"]')].length) formStatus.textContent = "";
     });
   });
+
+  const requestedService = new URLSearchParams(window.location.search).get("servicio");
+  if (requestedService && ALLOWED_SERVICES.has(requestedService)) {
+    serviceSelect.value = requestedService;
+  } else if (requestedService && serviceAliases.has(requestedService)) {
+    serviceSelect.value = serviceAliases.get(requestedService);
+  }
 }
