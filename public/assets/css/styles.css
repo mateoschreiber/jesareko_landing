@@ -1184,6 +1184,20 @@ h3 {
   margin: 0;
 }
 
+.privacy-contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 100%;
+  color: var(--color-brand-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
 .last-updated {
   color: var(--color-ink-soft);
   font-size: .9rem;

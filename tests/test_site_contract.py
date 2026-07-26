@@ -17,15 +17,19 @@ class PageParser(HTMLParser):
         self.h1_count = 0
         self.images = []
         self.links = []
+        self.article_links = []
         self.class_tokens = set()
         self.dialog_count = 0
         self.selects = []
         self.navs = []
         self.product_editorial_images = []
+        self._article_depth = 0
         self._product_editorial_depth = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "article":
+            self._article_depth += 1
         if tag == "article" and "product-editorial" in attrs.get("class", "").split():
             self._product_editorial_depth += 1
         self.class_tokens.update(attrs.get("class", "").split())
@@ -39,6 +43,8 @@ class PageParser(HTMLParser):
                 self.product_editorial_images.append(attrs)
         if tag == "a":
             self.links.append(attrs)
+            if self._article_depth:
+                self.article_links.append(attrs)
         if tag == "dialog":
             self.dialog_count += 1
         if tag == "select":
@@ -49,6 +55,8 @@ class PageParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "article" and self._product_editorial_depth:
             self._product_editorial_depth -= 1
+        if tag == "article" and self._article_depth:
+            self._article_depth -= 1
 
 
 def parse_page(name):
@@ -136,6 +144,31 @@ class SiteContractTests(unittest.TestCase):
                 if link.get("target") == "_blank":
                     rel = set(link.get("rel", "").split())
                     self.assertTrue({"noopener", "noreferrer"}.issubset(rel))
+
+    def test_privacy_contact_links_have_local_touch_targets(self):
+        privacy_links = [
+            link
+            for link in parse_page("privacidad.html").article_links
+            if link.get("href", "").startswith(("mailto:", "https://wa.me/"))
+        ]
+        self.assertEqual(len(privacy_links), 3)
+        for link in privacy_links:
+            with self.subTest(href=link["href"]):
+                self.assertIn("privacy-contact-link", link.get("class", "").split())
+
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        rule = re.search(r"(?ms)^\.privacy-contact-link\s*\{(?P<body>.*?)^\}", css)
+        self.assertIsNotNone(rule)
+        body = rule.group("body")
+        self.assertRegex(body, r"display:\s*inline-flex;")
+        self.assertRegex(body, r"min-height:\s*48px;")
+        self.assertRegex(body, r"min-width:\s*48px;")
+        self.assertRegex(body, r"max-width:\s*100%;")
+        self.assertRegex(body, r"overflow-wrap:\s*anywhere;")
+
+        global_link_rule = re.search(r"(?ms)^a\s*\{(?P<body>.*?)^\}", css)
+        self.assertIsNotNone(global_link_rule)
+        self.assertNotRegex(global_link_rule.group("body"), r"(?:display|min-(?:height|width))\s*:")
 
     def test_css_does_not_mask_layout_failures(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
