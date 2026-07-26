@@ -19,9 +19,13 @@ class PageParser(HTMLParser):
         self.dialog_count = 0
         self.selects = []
         self.navs = []
+        self.product_editorial_images = []
+        self._product_editorial_depth = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "article" and "product-editorial" in attrs.get("class", "").split():
+            self._product_editorial_depth += 1
         self.class_tokens.update(attrs.get("class", "").split())
         if "id" in attrs:
             self.ids.append(attrs["id"])
@@ -29,6 +33,8 @@ class PageParser(HTMLParser):
             self.h1_count += 1
         if tag == "img":
             self.images.append(attrs)
+            if self._product_editorial_depth:
+                self.product_editorial_images.append(attrs)
         if tag == "a":
             self.links.append(attrs)
         if tag == "dialog":
@@ -37,6 +43,10 @@ class PageParser(HTMLParser):
             self.selects.append(attrs)
         if tag == "nav":
             self.navs.append(attrs)
+
+    def handle_endtag(self, tag):
+        if tag == "article" and self._product_editorial_depth:
+            self._product_editorial_depth -= 1
 
 
 def parse_page(name):
@@ -56,6 +66,21 @@ class SiteContractTests(unittest.TestCase):
                 if "assets/img/brands/" in src:
                     used.add(src)
         self.assertTrue(used.issubset(registered))
+
+    def test_every_technology_catalog_asset_is_used_in_an_editorial_product(self):
+        registry = json.loads((ROOT / "docs" / "image-sources.json").read_text(encoding="utf-8"))
+        catalog_assets = {
+            item["local_file"]
+            for item in registry["images"]
+            if item["usage_context"] == "technologies_catalog"
+        }
+        editorial_assets = {
+            image["src"]
+            for image in parse_page("tecnologias.html").product_editorial_images
+            if "assets/img/brands/" in image.get("src", "")
+        }
+
+        self.assertEqual(catalog_assets, editorial_assets)
 
     def test_every_page_uses_new_shared_shell(self):
         for page in PAGES:
