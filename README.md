@@ -40,6 +40,13 @@ Abrir <http://localhost:4173/>.
 ## Verificación
 
 ```powershell
+python -m unittest discover -s tests -v
+python -m http.server 4173 --directory public
+```
+
+La revisión responsive se realiza en 320, 360, 390, 430, 768, 1024, 1280 y 1440 px.
+
+```powershell
 node --check public/assets/js/main.js
 curl.exe -sSI https://jesareko.com/
 ```
