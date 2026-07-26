@@ -34,27 +34,28 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 updateScrollState();
 
-function closeMobileMenu() {
-  navToggle?.classList.remove("is-open");
-  primaryMenu?.classList.remove("is-open");
-  navToggle?.setAttribute("aria-expanded", "false");
-  navToggle?.setAttribute("aria-label", "Abrir menú");
+function setMenuOpen(open) {
+  navToggle?.classList.toggle("is-open", open);
+  primaryMenu?.classList.toggle("is-open", open);
+  navToggle?.setAttribute("aria-expanded", String(open));
+  navToggle?.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
 }
 
 navToggle?.addEventListener("click", () => {
-  const isOpen = primaryMenu?.classList.toggle("is-open");
-  navToggle.classList.toggle("is-open", Boolean(isOpen));
-  navToggle.setAttribute("aria-expanded", String(isOpen));
-  navToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+  setMenuOpen(navToggle.getAttribute("aria-expanded") !== "true");
 });
 
 document.addEventListener("click", (event) => {
-  if (primaryMenu && navToggle && !primaryMenu.contains(event.target) && !navToggle.contains(event.target)) closeMobileMenu();
+  if (primaryMenu && navToggle && !primaryMenu.contains(event.target) && !navToggle.contains(event.target)) setMenuOpen(false);
 });
 
-document.querySelectorAll(".nav-links a").forEach((link) => {
-  link.addEventListener("click", closeMobileMenu);
-  const currentPath = window.location.pathname.split("/").pop() || "index.html";
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setMenuOpen(false);
+});
+
+document.querySelectorAll(".nav-menu > a:not(.btn)").forEach((link) => {
+  link.addEventListener("click", () => setMenuOpen(false));
+  const currentPath = window.location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
   link.classList.toggle("is-active", link.getAttribute("href") === currentPath);
 });
 

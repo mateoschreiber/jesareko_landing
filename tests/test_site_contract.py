@@ -34,6 +34,24 @@ def parse_page(name):
 
 
 class SiteContractTests(unittest.TestCase):
+    def test_every_page_uses_new_shared_shell(self):
+        for page in PAGES:
+            source = (PUBLIC / page).read_text(encoding="utf-8")
+            with self.subTest(page=page):
+                self.assertIn('class="site-nav"', source)
+                self.assertIn('class="brand-lockup"', source)
+                self.assertIn('class="site-footer"', source)
+                self.assertIn('aria-controls="primaryMenu"', source)
+
+    def test_whatsapp_uses_symbol_not_emoji(self):
+        for page in PAGES:
+            source = (PUBLIC / page).read_text(encoding="utf-8")
+            with self.subTest(page=page):
+                self.assertNotIn("📱", source)
+                self.assertNotIn("☎", source)
+                if "wa.me/" in source:
+                    self.assertIn('href="#icon-whatsapp"', source)
+
     def test_every_page_has_one_h1_and_unique_ids(self):
         for page in PAGES:
             with self.subTest(page=page):

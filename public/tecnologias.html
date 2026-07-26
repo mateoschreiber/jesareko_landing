@@ -54,27 +54,19 @@
   <a class="skip-link" href="#inicio">Saltar al contenido principal</a>
 
   <header class="site-header" id="siteHeader">
-    <nav class="navbar container" aria-label="Navegación principal">
-      <a class="brand" href="/" aria-label="Jesareko, inicio">
-        <img class="brand__logo" src="assets/img/jesareko-logo.svg" alt="" width="40" height="40">
-        <span class="brand__name">Jesareko</span>
+    <nav class="site-nav" aria-label="Navegación principal">
+      <a class="brand-lockup" href="/" aria-label="Jesareko, inicio">
+        <img src="assets/img/jesareko-logo.svg" alt="" width="32" height="32">
+        <span>Jesareko</span>
       </a>
-
       <button class="nav-toggle" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="primaryMenu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
       </button>
-
       <div class="nav-menu" id="primaryMenu">
-        <ul class="nav-links">
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/servicios">Servicios</a></li>
-          <li><a href="/casos">Casos</a></li>
-          <li><a href="/tecnologias" class="is-active">Tecnologías</a></li>
-          <li><a href="/contacto">Contacto</a></li>
-        </ul>
-        <a class="btn btn--primary btn--nav" href="https://wa.me/595971141032?text=Hola%20Jesareko%2C%20quiero%20consultar%20por%20una%20revisi%C3%B3n%20t%C3%A9cnica." target="_blank" rel="noopener noreferrer"><svg class="btn-icon whatsapp-icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>WhatsApp</a>
+        <a href="/servicios">Servicios</a><a href="/casos">Casos</a><a href="/tecnologias">Tecnologías</a><a href="/contacto">Contacto</a>
+        <a class="btn btn--primary" href="https://wa.me/595971141032" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg><span>Solicitar diagnóstico</span>
+        </a>
       </div>
     </nav>
   </header>
@@ -299,19 +291,18 @@
 
   <footer class="site-footer">
     <div class="container footer-grid">
-      <div>
-        <div class="footer-logo">
-          <img src="assets/img/jesareko-logo.svg" alt="" width="44" height="44">
-          <strong>Jesareko</strong>
-        </div>
-        <p>Diagnóstico, instalación, integración y soporte para redes WiFi, CCTV, alarmas, accesos, incendio, monitoreo y presencia web.</p>
+      <div class="footer-brand">
+        <a class="brand-lockup" href="/" aria-label="Jesareko, inicio"><img src="assets/img/jesareko-logo.svg" alt="" width="32" height="32"><span>Jesareko</span></a>
+        <p>Infraestructura tecnológica clara, estable y documentada.</p>
         <p>Encarnación, Itapúa y zonas cercanas de Paraguay.</p>
       </div>
+      <nav aria-label="Navegación del pie"><h2>Navegación</h2><a href="/">Inicio</a><a href="/casos">Casos</a><a href="/tecnologias">Tecnologías</a></nav>
+      <div><h2>Servicios</h2><a href="/servicios">Redes y WiFi</a><a href="/servicios">Seguridad física</a><a href="/servicios">Soporte técnico</a></div>
+      <div><h2>Contacto y legal</h2><a href="mailto:alemateo07@gmail.com">alemateo07@gmail.com</a><a href="https://wa.me/595971141032" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg><span>WhatsApp</span></a><a href="/contacto">Solicitar diagnóstico</a><a href="/privacidad">Política de privacidad</a></div>
     </div>
     <div class="container footer-bottom">
       <div class="footer-legal">
-        <p>© 2026 Jesareko. Todos los derechos reservados.</p>
-        <p><a href="/privacidad">Política de privacidad</a> · Servicios sujetos a diagnóstico y evaluación técnica previa.</p>
+        <p>© 2026 Jesareko. Todos los derechos reservados.</p><p>Servicios sujetos a diagnóstico y evaluación técnica previa.</p>
       </div>
     </div>
   </footer>
