@@ -1,6 +1,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 import re
+import subprocess
 import unittest
 from urllib.parse import unquote
 
@@ -87,6 +88,18 @@ def parsed_html(name):
 
 
 class ContentContractTests(unittest.TestCase):
+    def test_contact_query_initialization_runtime_contract(self):
+        runtime_test = Path(__file__).with_name("contact-query-runtime.mjs")
+        result = subprocess.run(
+            ["node", str(runtime_test)],
+            cwd=PUBLIC.parent,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_public_pages_exist(self):
         for page in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html", "privacidad.html"):
             with self.subTest(page=page):
