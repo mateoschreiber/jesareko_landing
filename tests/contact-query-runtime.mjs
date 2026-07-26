@@ -8,6 +8,7 @@ function initializedService(search, initialValue = "sentinel") {
   const field = () => ({ addEventListener() {} });
   const service = { ...field(), value: initialValue };
   const contactForm = {
+    addEventListener() {},
     elements: {
       name: field(),
       company: field(),

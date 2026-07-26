@@ -140,6 +140,9 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(form.attrs.get("action"), "mailto:alemateo07@gmail.com")
         self.assertEqual(form.attrs.get("method"), "post")
         self.assertEqual(form.attrs.get("enctype"), "text/plain")
+        self.assertNotIn("novalidate", form.attrs)
+        email_submit = next(node for node in form.find_all("button") if node.attrs.get("id") == "sendEmail")
+        self.assertEqual(email_submit.attrs.get("type"), "submit")
         fallback = next(node for node in form.find_all("p", "no-js-fallback"))
         self.assertIn("mailto:alemateo07@gmail.com", [link.attrs.get("href") for link in fallback.find_all("a")])
 

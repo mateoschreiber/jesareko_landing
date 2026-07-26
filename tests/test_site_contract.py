@@ -214,7 +214,27 @@ class SiteContractTests(unittest.TestCase):
     def test_focus_and_hidden_back_to_top_are_accessible(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
-        self.assertIn("outline: 3px solid var(--color-brand-dark);", css)
+        root = re.search(r"(?s):root\s*\{(?P<body>.*?)\}", css)
+        focus = re.search(r"(?s):focus-visible\s*\{(?P<body>.*?)\}", css)
+        self.assertIsNotNone(root)
+        self.assertIsNotNone(focus)
+        colors = dict(re.findall(r"(--color-[\w-]+):\s*(#[0-9a-fA-F]{6})", root.group("body")))
+        ring_tokens = re.findall(r"var\((--color-[\w-]+)\)|(#[0-9a-fA-F]{6})", focus.group("body"))
+        ring_colors = [colors[token] if token else literal for token, literal in ring_tokens]
+
+        def luminance(hex_color):
+            channels = [int(hex_color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+            linear = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+        def contrast(first, second):
+            high, low = sorted((luminance(first), luminance(second)), reverse=True)
+            return (high + 0.05) / (low + 0.05)
+
+        self.assertGreaterEqual(len(set(ring_colors)), 2)
+        for background in ("--color-paper", "--color-ink", "--color-brand"):
+            with self.subTest(background=background):
+                self.assertGreaterEqual(max(contrast(ring, colors[background]) for ring in ring_colors), 3)
         self.assertRegex(css, r"(?s)\.back-to-top\s*\{[^}]*visibility:\s*hidden;")
         self.assertRegex(css, r"(?s)\.back-to-top\.is-visible\s*\{[^}]*visibility:\s*visible;")
         self.assertIn('backToTop?.toggleAttribute("aria-hidden", window.scrollY <= 520);', script)

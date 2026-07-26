@@ -93,6 +93,7 @@ accordionButtons.forEach((button, index) => {
 });
 
 if (contactForm) {
+  contactForm.noValidate = true;
   const formStatus = document.getElementById("formStatus");
   const serviceSelect = contactForm.elements.service;
   const normalize = (value, limit, multiline = false) => String(value || "")
@@ -166,7 +167,8 @@ if (contactForm) {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message(data))}`, "_blank", "noopener,noreferrer");
   });
 
-  document.getElementById("sendEmail")?.addEventListener("click", () => {
+  contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
     const data = validate();
     if (!data) return;
     formStatus.textContent = "Abriendo el cliente de correo con el mensaje preparado.";
