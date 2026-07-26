@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +46,17 @@ def parse_page(name):
 
 
 class SiteContractTests(unittest.TestCase):
+    def test_every_brand_image_has_a_source_record(self):
+        registry = json.loads((ROOT / "docs" / "image-sources.json").read_text(encoding="utf-8"))
+        registered = {item["local_file"] for item in registry["images"]}
+        used = set()
+        for page in PAGES:
+            for image in parse_page(page).images:
+                src = image.get("src", "")
+                if "assets/img/brands/" in src:
+                    used.add(src)
+        self.assertTrue(used.issubset(registered))
+
     def test_every_page_uses_new_shared_shell(self):
         for page in PAGES:
             with self.subTest(page=page):

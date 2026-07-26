@@ -1,16 +1,54 @@
 {
-  "purpose": "Registro de activos visuales publicados en public/assets/img/brands.",
-  "policy": "No sustituye licencias ni autorizaciones comerciales. Verificar la procedencia y el permiso de cada activo antes de una campaña o redistribución.",
-  "assets": [
-    {"file": "biometric-access-terminal.webp", "brand": "Sin confirmar", "status": "source_verification_required"},
-    {"file": "dahua-access-terminal.webp", "brand": "Dahua", "status": "source_verification_required"},
-    {"file": "dahua-video-surveillance.webp", "brand": "Dahua", "status": "source_verification_required"},
-    {"file": "ezviz-cs8-camera.webp", "brand": "EZVIZ", "status": "source_verification_required"},
-    {"file": "fire-alarm-system-kit.webp", "brand": "Sin confirmar", "status": "source_verification_required"},
-    {"file": "hikvision-alarm-kit.webp", "brand": "Hikvision", "status": "source_verification_required"},
-    {"file": "hikvision-cctv-cameras-clean.png", "brand": "Hikvision", "status": "source_verification_required", "provenance": "user_provided_reference_background_cleaned"},
-    {"file": "hikvision-cctv-cameras.webp", "brand": "Hikvision", "status": "source_verification_required"},
-    {"file": "imou-pt-camera.webp", "brand": "Imou", "status": "source_verification_required"},
-    {"file": "ubiquiti-network-equipment.webp", "brand": "Ubiquiti", "status": "source_verification_required"}
+  "images": [
+    {
+      "local_file": "assets/img/brands/dahua-video-surveillance.webp",
+      "brand": "Dahua",
+      "product": "IPC-HDBW3441F-AS-S2 camera views",
+      "source_url": "https://www.dahuasecurity.com/products/network-products/network-cameras/WizSense-Series/3-Series/4MP/IPC-HDBW3441F-AS-S2%3DS2",
+      "asset_url": "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1_0_01_04_38418/ProductImage/1_0_01_04_38418_330791362_crop.png",
+      "usage_basis": "Official manufacturer product media displayed on the linked product page; no redistribution license is stated there",
+      "processing": "Three official product views composed on a transparent 1175 x 448 canvas and encoded as WebP at quality 86; no source image was enlarged",
+      "retrieved_on": "2026-07-26"
+    },
+    {
+      "local_file": "assets/img/brands/hikvision-acusense-surveillance.webp",
+      "brand": "Hikvision",
+      "product": "AcuSense technology application banner",
+      "source_url": "https://content.hikvision.com/eu-acusense-camera",
+      "asset_url": "https://content.hikvision.com/hubfs/AcuSense%20Banner%202130x720px%20Jul2019-1.png",
+      "usage_basis": "Official manufacturer marketing media displayed on the linked Hikvision page; no redistribution license is stated there",
+      "processing": "Downscaled from 2130 x 720 to 1800 x 608 and encoded as WebP at quality 85",
+      "retrieved_on": "2026-07-26"
+    },
+    {
+      "local_file": "assets/img/brands/hikvision-ax-pro-alarm.webp",
+      "brand": "Hikvision",
+      "product": "AX PRO complete alarm system",
+      "source_url": "https://content.hikvision.com/alarmeaxpro",
+      "asset_url": "https://content.hikvision.com/hubfs/Brasil/Untitled%20image%20(2).png",
+      "usage_basis": "Official manufacturer marketing media displayed on the linked Hikvision page; no redistribution license is stated there",
+      "processing": "Downscaled from 4000 x 1333 to 2000 x 666 and encoded as WebP at quality 85",
+      "retrieved_on": "2026-07-26"
+    },
+    {
+      "local_file": "assets/img/brands/dahua-asi3103f-access-controller.webp",
+      "brand": "Dahua",
+      "product": "ASI3103F-MEW face recognition access controller",
+      "source_url": "https://www.dahuasecurity.com/products/access-control-%26-time-attendance/ai/standalone/lite/asi3103f-mew",
+      "asset_url": "https://material.dahuasecurity.com/uploads/cpq/86461/image/1_0_01_25_12640_900240222.PNG",
+      "usage_basis": "Official manufacturer product media displayed on the linked product page; no redistribution license is stated there",
+      "processing": "Transparent source cropped to its visible bounds, downscaled from 8688 x 5792 to 743 x 1800, and encoded as WebP at quality 86",
+      "retrieved_on": "2026-07-26"
+    },
+    {
+      "local_file": "assets/img/brands/dahua-wizsense-dome-camera.webp",
+      "brand": "Dahua",
+      "product": "IPC-HDBW3441F-AS-S2 WizSense dome camera",
+      "source_url": "https://www.dahuasecurity.com/products/network-products/network-cameras/WizSense-Series/3-Series/4MP/IPC-HDBW3441F-AS-S2%3DS2",
+      "asset_url": "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1_0_01_04_38418/ProductImage/1_0_01_04_38418_330791362_crop.png",
+      "usage_basis": "Official manufacturer product media displayed on the linked product page; no redistribution license is stated there",
+      "processing": "Transparent source cropped to its visible bounds, downscaled from 4000 x 4000 to 1800 x 1345, and encoded as WebP at quality 86",
+      "retrieved_on": "2026-07-26"
+    }
   ]
 }

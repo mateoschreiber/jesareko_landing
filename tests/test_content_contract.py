@@ -256,3 +256,48 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(source.count(f'content="{description}"'), 3)
         self.assertIn(f'"description": "{description}"', source)
         self.assertNotIn("resultados esperables", source.lower())
+
+    def test_technologies_is_an_editorial_application_catalog(self):
+        source = html("tecnologias.html")
+        page = parsed_html("tecnologias.html")
+        products = page.find_all("article", "product-editorial")
+
+        self.assertEqual(len(products), 4)
+        self.assertNotIn("product-ref-grid", source)
+        self.assertNotIn("tech-grid", source)
+        self.assertEqual(
+            [product.children("div", "product-editorial__copy")[0].children("h2")[0].text() for product in products],
+            [
+                "Videovigilancia para cobertura útil.",
+                "Alarmas que avisan cuando importa.",
+                "Accesos con permisos y trazabilidad.",
+                "Video y acceso como un solo sistema.",
+            ],
+        )
+        self.assertEqual(
+            [product.children("div", "product-editorial__copy")[0].children("span", "brand-wordmark")[0].text() for product in products],
+            ["Hikvision", "Hikvision", "Dahua", "Dahua"],
+        )
+        for product in products:
+            with self.subTest(product=product.text()):
+                self.assertTrue({"product-editorial", "editorial-grid"}.issubset(product.attrs.get("class", "").split()))
+                self.assertEqual(len(product.children("figure", "product-editorial__media")), 1)
+                self.assertEqual(len(product.children("div", "product-editorial__copy")), 1)
+
+    def test_technologies_components_have_mobile_first_styles(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        for selector in (
+            ".product-editorial",
+            ".product-editorial__media",
+            ".product-editorial__copy",
+            ".brand-wordmark",
+        ):
+            with self.subTest(selector=selector):
+                self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
+        base = re.search(r"(?ms)^\.product-editorial\s*\{(?P<body>.*?)^\}", styles)
+        self.assertIsNotNone(base)
+        self.assertRegex(base.group("body"), r"grid-template-columns:\s*minmax\(0,\s*1fr\);")
+        self.assertRegex(
+            styles,
+            r"(?s)@media\s*\(min-width:\s*48rem\).*?\.product-editorial\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1\.08fr\)\s+minmax\(0,\s*\.92fr\);",
+        )
