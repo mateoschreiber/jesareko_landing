@@ -1,7 +1,9 @@
 from pathlib import Path
+import re
 import unittest
 
 PUBLIC = Path(__file__).resolve().parents[1] / "public"
+STYLES = PUBLIC / "assets" / "css" / "styles.css"
 
 
 def html(name):
@@ -25,4 +27,34 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(positions, sorted(positions))
         self.assertEqual(source.count('class="service-row__item"'), 3)
         self.assertIn("Infraestructura clara. Sistemas que funcionan.", source)
-        self.assertIn("Encarnación", source)
+        hero = source[positions[0]:positions[1]]
+        cases = source[positions[4]:positions[5]]
+        self.assertEqual(hero.count("<p>"), 1)
+        self.assertEqual(hero.count('class="btn btn--primary"'), 1)
+        self.assertEqual(cases.count("<article>"), 3)
+        self.assertIn('<p class="eyebrow">Encarnación · Itapúa</p>', hero)
+        self.assertIn('width="1175" height="448"', hero)
+        for forbidden in ("chip-list", "dashboard", "metric-grid", "metric-card", "service-card__icon"):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, source)
+
+    def test_homepage_components_have_focused_styles(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        selectors = (
+            ".hero__copy",
+            ".hero__media",
+            ".service-row",
+            ".service-row__item",
+            ".technology-proof",
+            ".brand-list",
+            ".process-section",
+            ".process-list",
+            ".case-preview",
+            ".case-preview__grid",
+            ".diagnostic-cta",
+        )
+        for selector in selectors:
+            with self.subTest(selector=selector):
+                self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
+        self.assertRegex(styles, r"(?s)\.hero__media img\s*\{[^}]*height:\s*auto;")
+        self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*1175\s*/\s*448;")
