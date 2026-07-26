@@ -41,15 +41,13 @@ Abrir <http://localhost:4173/>.
 
 ```powershell
 python -m unittest discover -s tests -v
+python -m compileall tests
+node --check public/assets/js/main.js
+git diff --check
 python -m http.server 4173 --directory public
 ```
 
-La revisión responsive se realiza en 320, 360, 390, 430, 768, 1024, 1280 y 1440 px.
-
-```powershell
-node --check public/assets/js/main.js
-curl.exe -sSI https://jesareko.com/
-```
+La revisión responsive se realiza en las seis páginas, a 320, 360, 390, 430, 768, 1024, 1280 y 1440 px.
 
 Antes de publicar, comprobar navegación, formulario, enlaces de WhatsApp/correo, vista móvil y consola del navegador.
 
@@ -72,6 +70,8 @@ Antes de una publicación comercial, revisar:
 - Dominio, canonical, sitemap y metadatos sociales.
 - Imagen Open Graph rasterizada.
 - Derechos y procedencia de imágenes en `docs/image-sources.json`.
+
+La autorización de uso comercial de imágenes de fabricantes es un requisito operativo previo al despliegue.
 
 ## Seguridad y privacidad
 

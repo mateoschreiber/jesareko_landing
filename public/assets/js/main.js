@@ -49,7 +49,10 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") setMenuOpen(false);
+  if (event.key === "Escape" && navToggle?.getAttribute("aria-expanded") === "true") {
+    setMenuOpen(false);
+    navToggle.focus();
+  }
 });
 
 document.querySelectorAll(".nav-menu > a:not(.btn)").forEach((link) => {

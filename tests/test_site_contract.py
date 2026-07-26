@@ -1,6 +1,8 @@
 from html.parser import HTMLParser
 from pathlib import Path
 import json
+import re
+import subprocess
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -134,6 +136,41 @@ class SiteContractTests(unittest.TestCase):
                 if link.get("target") == "_blank":
                     rel = set(link.get("rel", "").split())
                     self.assertTrue({"noopener", "noreferrer"}.issubset(rel))
+
+    def test_css_does_not_mask_layout_failures(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        self.assertNotIn("overflow-x: hidden", css)
+        self.assertNotIn("margin-left: -", css)
+        self.assertIn("@media (prefers-reduced-motion: reduce)", css)
+        for token in ("--radius-sm: 10px", "--radius-md: 14px", "--radius-lg: 20px"):
+            self.assertIn(token, css)
+
+    def test_responsive_queries_are_consolidated(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        self.assertEqual(css.count("@media (max-width: 52rem)"), 1)
+
+    def test_button_has_one_canonical_definition(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        self.assertEqual(len(re.findall(r"(?m)^\.btn\s*\{", css)), 1)
+
+    def test_mobile_menu_escape_restores_focus(self):
+        runtime_test = Path(__file__).with_name("nav-menu-runtime.mjs")
+        result = subprocess.run(
+            ["node", str(runtime_test)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_local_asset_references_exist(self):
+        for page in PAGES:
+            for image in parse_page(page).images:
+                src = image.get("src", "")
+                if src and not src.startswith(("http://", "https://", "data:")):
+                    self.assertTrue((PUBLIC / src).is_file(), f"{page}: missing {src}")
 
 
 if __name__ == "__main__":
