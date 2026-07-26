@@ -175,6 +175,26 @@ class ContentContractTests(unittest.TestCase):
         fallback = next(node for node in form.find_all("p", "no-js-fallback"))
         self.assertIn("mailto:alemateo07@gmail.com", [link.attrs.get("href") for link in fallback.find_all("a")])
 
+    def test_email_destination_is_not_exposed_as_visible_page_copy(self):
+        for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html", "privacidad.html"):
+            with self.subTest(page=page_name):
+                page = parsed_html(page_name)
+                visible_regions = page.find_all("main") + page.find_all("footer")
+                self.assertNotIn("alemateo07@gmail.com", " ".join(region.text() for region in visible_regions))
+
+        contact = parsed_html("contacto.html")
+        form = next(node for node in contact.find_all("form") if node.attrs.get("id") == "contactForm")
+        self.assertEqual(form.attrs.get("action"), "mailto:alemateo07@gmail.com")
+
+    def test_footer_is_reduced_to_three_compact_information_groups(self):
+        for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html", "privacidad.html"):
+            with self.subTest(page=page_name):
+                footer = parsed_html(page_name).find_all("footer", "site-footer")[0]
+                grid = footer.children("div", "footer-grid")[0]
+                groups = [node for node in grid.content if isinstance(node, HtmlNode)]
+                self.assertEqual(len(groups), 3)
+                self.assertEqual([group.children("h2")[0].text() for group in groups[1:]], ["Explorar", "Contacto"])
+
     def test_global_whatsapp_calls_to_action_include_a_prefilled_message(self):
         for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html"):
             page = parsed_html(page_name)
@@ -418,6 +438,12 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue({"product-editorial", "editorial-grid"}.issubset(product.attrs.get("class", "").split()))
                 self.assertEqual(len(product.children("figure", "product-editorial__media")), 1)
                 self.assertEqual(len(product.children("div", "product-editorial__copy")), 1)
+
+        alarm = next(
+            image for image in page.find_all("img")
+            if image.attrs.get("src") == "assets/img/brands/hikvision-ax-pro-alarm.webp"
+        )
+        self.assertTrue(alarm.parent.has_class("product-editorial__media--alarm"))
 
     def test_technologies_covers_networks_and_support_without_unshown_promises(self):
         source = html("tecnologias.html")

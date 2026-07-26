@@ -152,9 +152,9 @@ class SiteContractTests(unittest.TestCase):
         privacy_links = [
             link
             for link in parse_page("privacidad.html").article_links
-            if link.get("href", "").startswith(("mailto:", "https://wa.me/"))
+            if link.get("href", "").startswith(("/contacto", "https://wa.me/"))
         ]
-        self.assertEqual(len(privacy_links), 3)
+        self.assertEqual(len(privacy_links), 2)
         for link in privacy_links:
             with self.subTest(href=link["href"]):
                 self.assertIn("privacy-contact-link", link.get("class", "").split())

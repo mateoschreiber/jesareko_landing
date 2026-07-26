@@ -17,6 +17,35 @@ const backToTop = document.getElementById("backToTop");
 const contactForm = document.getElementById("contactForm");
 document.documentElement?.classList.add("js");
 
+const reducedMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)");
+if (!reducedMotion?.matches && "IntersectionObserver" in window) {
+  const revealTargets = document.querySelectorAll([
+    ".service-row__item",
+    ".technology-proof",
+    ".process-section",
+    ".case-preview",
+    ".service-detail",
+    ".case-study",
+    ".product-editorial",
+    ".technology-capability",
+    ".diagnostic-cta",
+    ".contact-grid",
+    ".privacy-card"
+  ].join(","));
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-revealed");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: .12, rootMargin: "0px 0px -4%" });
+
+  revealTargets.forEach((target) => {
+    target.classList.add("reveal-item");
+    revealObserver.observe(target);
+  });
+}
+
 function updateScrollState() {
   const isScrolled = window.scrollY > 12;
   const isVisible = window.scrollY > 520;
