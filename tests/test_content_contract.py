@@ -134,6 +134,24 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(status.attrs.get("role"), "status")
         self.assertEqual(status.attrs.get("aria-live"), "polite")
 
+    def test_contact_form_has_an_honest_no_javascript_fallback(self):
+        page = parsed_html("contacto.html")
+        form = next(node for node in page.find_all("form") if node.attrs.get("id") == "contactForm")
+        self.assertEqual(form.attrs.get("action"), "mailto:alemateo07@gmail.com")
+        self.assertEqual(form.attrs.get("method"), "post")
+        self.assertEqual(form.attrs.get("enctype"), "text/plain")
+        fallback = next(node for node in form.find_all("p", "no-js-fallback"))
+        self.assertIn("mailto:alemateo07@gmail.com", [link.attrs.get("href") for link in fallback.find_all("a")])
+
+    def test_global_whatsapp_calls_to_action_include_a_prefilled_message(self):
+        for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html"):
+            page = parsed_html(page_name)
+            for link in page.find_all("a"):
+                href = link.attrs.get("href", "")
+                if href.startswith("https://wa.me/595971141032"):
+                    with self.subTest(page=page_name, href=href):
+                        self.assertIn("?text=", href)
+
     def test_contact_script_initializes_service_safely_and_links_errors(self):
         script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
         initialization = re.search(
@@ -312,9 +330,10 @@ class ContentContractTests(unittest.TestCase):
                 for label in ("Situación", "Criterio", "Intervención"):
                     self.assertIn(label, body)
 
+        main_text = next(node for node in page.find_all("main")).text().lower()
         for invented_proof in ("Resultado:", "%", "cliente:", "caso real"):
             with self.subTest(invented_proof=invented_proof):
-                self.assertNotIn(invented_proof.lower(), source.lower())
+                self.assertNotIn(invented_proof.lower(), main_text)
 
     def test_cases_components_have_focused_styles(self):
         styles = STYLES.read_text(encoding="utf-8")
@@ -368,6 +387,22 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue({"product-editorial", "editorial-grid"}.issubset(product.attrs.get("class", "").split()))
                 self.assertEqual(len(product.children("figure", "product-editorial__media")), 1)
                 self.assertEqual(len(product.children("div", "product-editorial__copy")), 1)
+
+    def test_technologies_covers_networks_and_support_without_unshown_promises(self):
+        source = html("tecnologias.html")
+        page = parsed_html("tecnologias.html")
+        capabilities = page.find_all("article", "technology-capability")
+        self.assertEqual([capability.children("h2")[0].text() for capability in capabilities], ["Redes y WiFi", "Soporte técnico"])
+        self.assertIn("cobertura", capabilities[0].text().lower())
+        self.assertIn("documentación", capabilities[1].text().lower())
+        for promise in ("detección de incendio", "monitoreo"):
+            with self.subTest(promise=promise):
+                self.assertNotIn(promise, source.lower())
+
+    def test_image_source_registry_blocks_publication_without_redistribution_authorization(self):
+        registry = (PUBLIC.parent / "docs" / "image-sources.json").read_text(encoding="utf-8")
+        self.assertIn('"status": "blocked"', registry)
+        self.assertIn('"redistribution_authorization": "unverified"', registry)
 
     def test_technologies_components_have_mobile_first_styles(self):
         styles = STYLES.read_text(encoding="utf-8")

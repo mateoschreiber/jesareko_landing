@@ -1,4 +1,9 @@
 {
+  "publication_gate": {
+    "status": "blocked",
+    "requirement": "Do not publish these assets until the rightsholder grants written redistribution authorization."
+  },
+  "redistribution_authorization": "unverified",
   "images": [
     {
       "local_file": "assets/img/brands/dahua-video-surveillance.webp",

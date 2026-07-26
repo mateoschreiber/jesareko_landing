@@ -32,7 +32,7 @@ Solo el contenido de `public/` se publica.
 No se requieren dependencias. Desde la raíz:
 
 ```powershell
-python -m http.server 4173 --directory public
+python scripts/serve-static.py --port 4173
 ```
 
 Abrir <http://localhost:4173/>.
@@ -44,7 +44,7 @@ python -m unittest discover -s tests -v
 python -m compileall tests
 node --check public/assets/js/main.js
 git diff --check
-python -m http.server 4173 --directory public
+python scripts/serve-static.py --port 4173
 ```
 
 La revisión responsive se realiza en las seis páginas, a 320, 360, 390, 430, 768, 1024, 1280 y 1440 px.

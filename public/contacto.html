@@ -64,7 +64,7 @@
       </button>
       <div class="nav-menu" id="primaryMenu">
         <a href="/servicios">Servicios</a><a href="/casos">Casos</a><a href="/tecnologias">Tecnologías</a><a href="/contacto">Contacto</a>
-        <a class="btn btn--primary" href="https://wa.me/595971141032" target="_blank" rel="noopener noreferrer">
+        <a class="btn btn--primary" href="https://wa.me/595971141032?text=Hola%20Jesareko%2C%20quiero%20solicitar%20un%20diagn%C3%B3stico%20t%C3%A9cnico." target="_blank" rel="noopener noreferrer">
           <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg><span>Solicitar diagnóstico</span>
         </a>
       </div>
@@ -83,14 +83,14 @@
           <div class="contact-primary contact-points">
             <h2>WhatsApp, la vía más rápida</h2>
             <p><a class="contact-phone" href="tel:+595971141032">+595 971 141 032</a></p>
-            <a class="btn btn--whatsapp" href="https://wa.me/595971141032" target="_blank" rel="noopener noreferrer">
+            <a class="btn btn--whatsapp" href="https://wa.me/595971141032?text=Hola%20Jesareko%2C%20quiero%20solicitar%20un%20diagn%C3%B3stico%20t%C3%A9cnico." target="_blank" rel="noopener noreferrer">
               <svg class="btn-icon whatsapp-icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg>
               <span>Escribir por WhatsApp</span>
             </a>
           </div>
         </div>
 
-        <form class="contact-form" id="contactForm" novalidate>
+        <form class="contact-form" id="contactForm" action="mailto:alemateo07@gmail.com" method="post" enctype="text/plain" novalidate>
           <div class="form-intro form-field--full">
             <h2>Prepará el detalle</h2>
             <p>Completá estos datos para enviarlos por WhatsApp o correo. Tus valores quedan en el formulario después de abrir el canal elegido.</p>
@@ -138,6 +138,7 @@
             <button type="button" class="btn btn--secondary btn--mail" id="sendEmail"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>Enviar por correo</button>
           </div>
 
+          <p class="no-js-fallback">Si tu navegador no ejecuta JavaScript, podés enviar el formulario por <a href="mailto:alemateo07@gmail.com">correo</a> o escribirnos al <a href="https://wa.me/595971141032?text=Hola%20Jesareko%2C%20quiero%20solicitar%20un%20diagn%C3%B3stico%20t%C3%A9cnico." target="_blank" rel="noopener noreferrer">WhatsApp</a>.</p>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -153,7 +154,7 @@
       </div>
       <nav aria-label="Navegación del pie"><h2>Navegación</h2><a href="/">Inicio</a><a href="/casos">Casos</a><a href="/tecnologias">Tecnologías</a></nav>
       <div><h2>Servicios</h2><a href="/servicios">Redes y WiFi</a><a href="/servicios">Seguridad física</a><a href="/servicios">Soporte técnico</a></div>
-      <div><h2>Contacto y legal</h2><a href="mailto:alemateo07@gmail.com">alemateo07@gmail.com</a><a href="https://wa.me/595971141032" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg><span>WhatsApp</span></a><a href="/contacto">Solicitar diagnóstico</a><a href="/privacidad">Política de privacidad</a></div>
+      <div><h2>Contacto y legal</h2><a href="mailto:alemateo07@gmail.com">alemateo07@gmail.com</a><a href="https://wa.me/595971141032?text=Hola%20Jesareko%2C%20quiero%20solicitar%20un%20diagn%C3%B3stico%20t%C3%A9cnico." target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg><span>WhatsApp</span></a><a href="/contacto">Solicitar diagnóstico</a><a href="/privacidad">Política de privacidad</a></div>
     </div>
     <div class="container footer-bottom">
       <div class="footer-legal">
@@ -162,7 +163,7 @@
     </div>
   </footer>
 
-  <button class="back-to-top" id="backToTop" type="button" aria-label="Volver arriba">
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Volver arriba" aria-hidden="true" tabindex="-1">
     <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 5l7 7-1.4 1.4-4.6-4.6V20h-2V8.8l-4.6 4.6L5 12l7-7z" fill="currentColor"></path>
     </svg>

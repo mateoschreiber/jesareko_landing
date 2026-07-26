@@ -4,6 +4,9 @@ import json
 import re
 import subprocess
 import unittest
+from importlib.util import module_from_spec, spec_from_file_location
+from threading import Thread
+from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
@@ -197,6 +200,44 @@ class SiteContractTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_mobile_navigation_has_a_no_javascript_fallback(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        mobile = re.search(r"(?s)@media \(max-width: 52rem\) \{(?P<body>.*?)\n\}", css)
+        self.assertIsNotNone(mobile)
+        body = mobile.group("body")
+        self.assertNotRegex(body, r"(?s)^\s*\.nav-menu\s*\{[^}]*display:\s*none;")
+        self.assertRegex(body, r"(?s)\.js\s+\.nav-menu\s*\{[^}]*display:\s*none;")
+        self.assertRegex(body, r"(?s)\.js\s+\.nav-menu\.is-open\s*\{[^}]*display:\s*flex;")
+        self.assertRegex(body, r"(?s)\.js\s+\.nav-toggle\s*\{[^}]*display:\s*flex;")
+
+    def test_focus_and_hidden_back_to_top_are_accessible(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        self.assertIn("outline: 3px solid var(--color-brand-dark);", css)
+        self.assertRegex(css, r"(?s)\.back-to-top\s*\{[^}]*visibility:\s*hidden;")
+        self.assertRegex(css, r"(?s)\.back-to-top\.is-visible\s*\{[^}]*visibility:\s*visible;")
+        self.assertIn('backToTop?.toggleAttribute("aria-hidden", window.scrollY <= 520);', script)
+        self.assertIn('tabIndex = isVisible ? 0 : -1;', script)
+        self.assertIn('behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"', script)
+
+    def test_clean_route_server_resolves_public_pages(self):
+        server_path = ROOT / "scripts" / "serve-static.py"
+        spec = spec_from_file_location("serve_static", server_path)
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        server = module.make_server(PUBLIC, "127.0.0.1", 0)
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            for route in ("/", "/servicios", "/casos", "/tecnologias", "/contacto", "/privacidad"):
+                with self.subTest(route=route), urlopen(f"http://127.0.0.1:{server.server_port}{route}") as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertIn(b"<!DOCTYPE html>", response.read(100))
+        finally:
+            server.shutdown()
+            thread.join()
+            server.server_close()
 
     def test_local_asset_references_exist(self):
         for page in PAGES:

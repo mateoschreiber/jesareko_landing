@@ -15,11 +15,15 @@ const navToggle = document.getElementById("navToggle");
 const primaryMenu = document.getElementById("primaryMenu");
 const backToTop = document.getElementById("backToTop");
 const contactForm = document.getElementById("contactForm");
+document.documentElement?.classList.add("js");
 
 function updateScrollState() {
   const isScrolled = window.scrollY > 12;
+  const isVisible = window.scrollY > 520;
   header?.classList.toggle("is-scrolled", isScrolled);
-  backToTop?.classList.toggle("is-visible", window.scrollY > 520);
+  backToTop?.classList.toggle("is-visible", isVisible);
+  backToTop?.toggleAttribute("aria-hidden", window.scrollY <= 520);
+  if (backToTop) backToTop.tabIndex = isVisible ? 0 : -1;
 }
 
 let scrollPending = false;
@@ -61,7 +65,7 @@ document.querySelectorAll(".nav-menu > a:not(.btn)").forEach((link) => {
   link.classList.toggle("is-active", link.getAttribute("href") === currentPath);
 });
 
-backToTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+backToTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }));
 
 const accordionButtons = [...document.querySelectorAll(".accordion__trigger")];
 function setAccordionState(button, isOpen) {
