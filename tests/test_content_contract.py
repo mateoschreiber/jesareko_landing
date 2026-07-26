@@ -58,3 +58,22 @@ class ContentContractTests(unittest.TestCase):
                 self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
         self.assertRegex(styles, r"(?s)\.hero__media img\s*\{[^}]*height:\s*auto;")
         self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*1175\s*/\s*448;")
+
+    def test_services_has_three_decision_paths(self):
+        source = html("servicios.html")
+        for section in ("redes", "seguridad", "soporte"):
+            self.assertIn(f'id="{section}"', source)
+        self.assertNotIn("Incluye:</strong>", source)
+        self.assertNotIn("Conviene cuando:</strong>", source)
+        self.assertNotIn("Resultado:</strong>", source)
+
+    def test_services_components_have_focused_styles(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        for selector in (
+            ".service-detail",
+            ".service-detail__intro",
+            ".service-detail__scope",
+            ".service-detail__note",
+        ):
+            with self.subTest(selector=selector):
+                self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")

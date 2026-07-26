@@ -500,6 +500,73 @@ h3 {
   font-weight: 700;
 }
 
+.service-detail {
+  gap: clamp(2rem, 6vw, 5rem);
+  padding-block: clamp(3rem, 7vw, 6rem);
+  border-block-start: 1px solid var(--color-line);
+  scroll-margin-top: 6rem;
+}
+
+.service-detail__intro {
+  min-width: 0;
+}
+
+.service-detail__intro h2 {
+  max-width: 18ch;
+}
+
+.service-detail__intro p {
+  max-width: 48ch;
+  margin: 0;
+  color: var(--color-ink-soft);
+}
+
+.service-detail .section-index {
+  display: inline-block;
+  margin-block-end: var(--space-2);
+  color: var(--color-brand);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.service-detail__scope {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.service-detail__scope h3,
+.service-detail__scope ul,
+.service-detail__scope p {
+  margin: 0;
+}
+
+.service-detail__scope ul {
+  padding-inline-start: 1.25rem;
+  color: var(--color-ink-soft);
+}
+
+.service-detail__scope li::marker {
+  color: var(--color-brand);
+}
+
+.service-detail__scope > a {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 48px;
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+.service-detail__note {
+  padding: var(--space-2);
+  border-inline-start: 3px solid var(--color-brand);
+  background: var(--color-canvas);
+  color: var(--color-ink-soft);
+}
+
 .diagnostic-cta {
   display: grid;
   gap: var(--space-2);
