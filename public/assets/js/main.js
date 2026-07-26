@@ -1,6 +1,5 @@
 const WHATSAPP_NUMBER = "595971141032";
 const EMAIL_TO = "alemateo07@gmail.com";
-document.documentElement.classList.add("has-js");
 const FIELD_LIMITS = { name: 80, company: 100, city: 80, message: 1000 };
 const ALLOWED_SERVICES = new Set([
   "Revisión técnica / diagnóstico",
@@ -89,42 +88,12 @@ accordionButtons.forEach((button, index) => {
 if (contactForm) {
   const formStatus = document.getElementById("formStatus");
   const serviceSelect = contactForm.elements.service;
-  const servicePicker = contactForm.querySelector("[data-service-picker]");
-  const serviceTrigger = servicePicker?.querySelector("[data-service-trigger]");
-  const serviceLabel = servicePicker?.querySelector("[data-service-label]");
-  const serviceOptions = servicePicker?.querySelector("[data-service-options]");
-  const serviceOptionButtons = [...(servicePicker?.querySelectorAll("[data-service-option]") || [])];
-  const servicePickerEnabled = Boolean(servicePicker && serviceSelect && serviceTrigger && serviceOptions && typeof serviceOptions.showModal === "function");
-  const serviceControl = servicePickerEnabled ? serviceTrigger : serviceSelect;
+  const serviceControl = serviceSelect;
   const normalize = (value, limit, multiline = false) => String(value || "")
     .normalize("NFC")
     .replace(multiline ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, "")
     .replace(multiline ? /\r\n?/g : /\s+/g, multiline ? "\n" : " ")
     .split("\n").map((line) => line.replace(/[ \t]+/g, " ").trim()).join("\n").trim().slice(0, limit);
-
-  function closeServicePicker(returnFocus = false) {
-    if (!servicePickerEnabled) return;
-    servicePicker.classList.remove("is-open");
-    serviceTrigger.setAttribute("aria-expanded", "false");
-    if (serviceOptions.open) serviceOptions.close();
-    if (returnFocus) serviceTrigger.focus();
-  }
-
-  function updateServicePicker(value) {
-    if (!servicePicker || !serviceTrigger || !serviceLabel) return;
-    const selected = serviceOptionButtons.find((option) => option.dataset.value === value) || serviceOptionButtons[0];
-    serviceLabel.textContent = selected?.textContent || "Seleccione un servicio";
-    serviceTrigger.classList.toggle("is-placeholder", !value);
-    serviceOptionButtons.forEach((option) => option.classList.toggle("is-selected", option === selected));
-  }
-
-  function openServicePicker(focusOption = false) {
-    if (!servicePickerEnabled) return;
-    servicePicker.classList.add("is-open");
-    serviceTrigger.setAttribute("aria-expanded", "true");
-    if (!serviceOptions.open) serviceOptions.showModal();
-    if (focusOption) (serviceOptionButtons.find((option) => option.dataset.value === serviceSelect.value) || serviceOptionButtons[0])?.focus();
-  }
 
   function clearFieldError(fieldName) {
     const field = contactForm.elements[fieldName];
@@ -134,58 +103,6 @@ if (contactForm) {
     control?.classList.remove("is-invalid");
     control?.setAttribute("aria-invalid", "false");
     contactForm.querySelector(`[data-error-for="${fieldName}"]`)?.replaceChildren();
-  }
-
-  if (servicePickerEnabled) {
-    serviceSelect.setAttribute("tabindex", "-1");
-    serviceSelect.setAttribute("aria-hidden", "true");
-    updateServicePicker(serviceSelect.value);
-
-    serviceTrigger.addEventListener("click", () => {
-      if (servicePicker.classList.contains("is-open")) closeServicePicker();
-      else openServicePicker();
-    });
-
-    serviceTrigger.addEventListener("keydown", (event) => {
-      if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
-      event.preventDefault();
-      openServicePicker(true);
-    });
-
-    serviceOptionButtons.forEach((option, index) => {
-      option.addEventListener("click", () => {
-        serviceSelect.value = option.dataset.value || "";
-        updateServicePicker(serviceSelect.value);
-        serviceSelect.dispatchEvent(new Event("input", { bubbles: true }));
-        closeServicePicker(true);
-      });
-      option.addEventListener("keydown", (event) => {
-        const offset = { ArrowDown: 1, ArrowUp: -1, Home: -index, End: serviceOptionButtons.length - 1 - index }[event.key];
-        if (event.key === "Escape") {
-          event.preventDefault();
-          closeServicePicker(true);
-        } else if (offset !== undefined) {
-          event.preventDefault();
-          serviceOptionButtons[(index + offset + serviceOptionButtons.length) % serviceOptionButtons.length].focus();
-        } else if (event.key === "Tab") {
-          closeServicePicker();
-        }
-      });
-    });
-
-    serviceSelect.addEventListener("change", () => updateServicePicker(serviceSelect.value));
-    serviceOptions.addEventListener("cancel", (event) => {
-      event.preventDefault();
-      closeServicePicker(true);
-    });
-    serviceOptions.addEventListener("click", (event) => {
-      if (event.target === serviceOptions) closeServicePicker(true);
-    });
-    servicePicker.querySelector("[data-service-close]")?.addEventListener("click", () => {
-      closeServicePicker(true);
-    });
-  } else {
-    document.documentElement.classList.remove("has-js");
   }
 
   function values() {

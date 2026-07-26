@@ -14,9 +14,14 @@ class PageParser(HTMLParser):
         self.h1_count = 0
         self.images = []
         self.links = []
+        self.class_tokens = set()
+        self.dialog_count = 0
+        self.selects = []
+        self.navs = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        self.class_tokens.update(attrs.get("class", "").split())
         if "id" in attrs:
             self.ids.append(attrs["id"])
         if tag == "h1":
@@ -25,6 +30,12 @@ class PageParser(HTMLParser):
             self.images.append(attrs)
         if tag == "a":
             self.links.append(attrs)
+        if tag == "dialog":
+            self.dialog_count += 1
+        if tag == "select":
+            self.selects.append(attrs)
+        if tag == "nav":
+            self.navs.append(attrs)
 
 
 def parse_page(name):
@@ -36,12 +47,25 @@ def parse_page(name):
 class SiteContractTests(unittest.TestCase):
     def test_every_page_uses_new_shared_shell(self):
         for page in PAGES:
-            source = (PUBLIC / page).read_text(encoding="utf-8")
             with self.subTest(page=page):
-                self.assertIn('class="site-nav"', source)
-                self.assertIn('class="brand-lockup"', source)
-                self.assertIn('class="site-footer"', source)
+                parsed = parse_page(page)
+                self.assertIn("site-nav", parsed.class_tokens)
+                self.assertIn("brand-lockup", parsed.class_tokens)
+                self.assertIn("site-footer", parsed.class_tokens)
+                primary_nav = next(nav for nav in parsed.navs if nav.get("aria-label") == "Navegación principal")
+                self.assertTrue({"site-nav", "container"}.issubset(primary_nav.get("class", "").split()))
+                source = (PUBLIC / page).read_text(encoding="utf-8")
                 self.assertIn('aria-controls="primaryMenu"', source)
+
+    def test_required_service_field_uses_native_select_without_overlay(self):
+        parsed = parse_page("contacto.html")
+        service_selects = [select for select in parsed.selects if select.get("name") == "service"]
+
+        self.assertEqual(parsed.dialog_count, 0)
+        self.assertFalse(any(token.startswith("service-picker") for token in parsed.class_tokens))
+        self.assertEqual(len(service_selects), 1)
+        self.assertNotEqual(service_selects[0].get("aria-hidden"), "true")
+        self.assertNotEqual(service_selects[0].get("tabindex"), "-1")
 
     def test_whatsapp_uses_symbol_not_emoji(self):
         for page in PAGES:
