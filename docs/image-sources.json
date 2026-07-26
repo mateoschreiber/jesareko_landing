@@ -6,29 +6,25 @@
   "redistribution_authorization": "unverified",
   "images": [
     {
-      "local_file": "assets/img/brands/dahua-video-surveillance.webp",
+      "local_file": "assets/img/brands/dahua-camera-lineup.webp",
       "brand": "Dahua",
-      "product": "IPC-HDBW3441F-AS-S2 camera views",
+      "product": "Dahua surveillance camera lineup",
       "usage_context": "homepage_hero",
-      "source_url": "https://www.dahuasecurity.com/products/network-products/network-cameras/WizSense-Series/3-Series/4MP/IPC-HDBW3441F-AS-S2%3DS2",
-      "asset_url": "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1_0_01_04_38418/ProductImage/1_0_01_04_38418_330791362_crop.png",
-      "additional_asset_urls": [
-        "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1_0_01_04_38418/ProductImage/1_0_01_04_38418_330791363_crop.png",
-        "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1_0_01_04_38418/ProductImage/1_0_01_04_38418_330798805_crop.png"
-      ],
-      "usage_basis": "Official manufacturer product media displayed on the linked product page; no redistribution license is stated there",
-      "processing": "Three official product views composed on a transparent 1175 x 448 canvas and encoded as WebP at quality 86; no source image was enlarged",
+      "source_type": "user_provided_upload",
+      "source_reference": "codex-clipboard-b84b1ad3-ad43-4571-bbe5-4c76c65a14b5.png",
+      "usage_basis": "Image supplied by the site owner for this placement; redistribution rights were not independently verified",
+      "processing": "Downscaled from 2866 x 1181 to 1600 x 659 and encoded as WebP at quality 85",
       "retrieved_on": "2026-07-26"
     },
     {
-      "local_file": "assets/img/brands/hikvision-acusense-surveillance.webp",
+      "local_file": "assets/img/brands/hikvision-camera-lineup.webp",
       "brand": "Hikvision",
-      "product": "AcuSense technology application banner",
+      "product": "Hikvision surveillance camera lineup",
       "usage_context": "technologies_catalog",
-      "source_url": "https://content.hikvision.com/eu-acusense-camera",
-      "asset_url": "https://content.hikvision.com/hubfs/AcuSense%20Banner%202130x720px%20Jul2019-1.png",
-      "usage_basis": "Official manufacturer marketing media displayed on the linked Hikvision page; no redistribution license is stated there",
-      "processing": "Downscaled from 2130 x 720 to 1800 x 608 and encoded as WebP at quality 85",
+      "source_type": "user_provided_upload",
+      "source_reference": "codex-clipboard-c90292c7-01aa-463c-be67-8b43e22c0932.png",
+      "usage_basis": "Image supplied by the site owner for this placement; redistribution rights were not independently verified",
+      "processing": "Original 1000 x 347 image encoded as WebP at quality 85",
       "retrieved_on": "2026-07-26"
     },
     {

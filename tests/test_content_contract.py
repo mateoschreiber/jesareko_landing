@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import json
 import re
 import subprocess
 import unittest
@@ -110,6 +111,29 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(page=page):
                 self.assertIn("https://wa.me/595971141032", html(page))
 
+    def test_requested_camera_lineups_are_used_in_primary_visual_positions(self):
+        homepage = parsed_html("index.html")
+        hero = next(node for node in homepage.find_all("figure", "hero__media"))
+        hero_image = hero.find_all("img")[0]
+        self.assertEqual(hero_image.attrs.get("src"), "assets/img/brands/dahua-camera-lineup.webp")
+        self.assertEqual((hero_image.attrs.get("width"), hero_image.attrs.get("height")), ("1600", "659"))
+
+        technologies = parsed_html("tecnologias.html")
+        hikvision_image = next(
+            image for image in technologies.find_all("img")
+            if image.attrs.get("src") == "assets/img/brands/hikvision-camera-lineup.webp"
+        )
+        self.assertEqual((hikvision_image.attrs.get("width"), hikvision_image.attrs.get("height")), ("1000", "347"))
+
+        registry = json.loads((PUBLIC.parent / "docs" / "image-sources.json").read_text(encoding="utf-8"))
+        records = {record["local_file"]: record for record in registry["images"]}
+        for local_file in (
+            "assets/img/brands/dahua-camera-lineup.webp",
+            "assets/img/brands/hikvision-camera-lineup.webp",
+        ):
+            with self.subTest(local_file=local_file):
+                self.assertEqual(records[local_file]["source_type"], "user_provided_upload")
+
     def test_contact_prioritizes_whatsapp_and_has_accessible_errors(self):
         source = html("contacto.html")
         page = parsed_html("contacto.html")
@@ -209,7 +233,6 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(hero.count('class="btn btn--primary"'), 1)
         self.assertEqual(cases.count("<article>"), 3)
         self.assertIn('<p class="eyebrow">Encarnación · Itapúa</p>', hero)
-        self.assertIn('width="1175" height="448"', hero)
         for forbidden in ("chip-list", "dashboard", "metric-grid", "metric-card", "service-card__icon"):
             with self.subTest(forbidden=forbidden):
                 self.assertNotIn(forbidden, source)
