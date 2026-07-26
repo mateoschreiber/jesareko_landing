@@ -355,7 +355,7 @@ h3 {
 
 .hero__media {
   min-width: 0;
-  aspect-ratio: 1175 / 448;
+  aspect-ratio: 1600 / 659;
   margin: 0;
   border-radius: var(--radius-lg);
   background: var(--color-canvas);

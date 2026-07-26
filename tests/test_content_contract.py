@@ -134,6 +134,11 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(local_file=local_file):
                 self.assertEqual(records[local_file]["source_type"], "user_provided_upload")
 
+        disclaimer = next(node for node in technologies.find_all("p", "asset-disclaimer")).text().lower()
+        self.assertIn("aportado por el propietario del sitio", disclaimer)
+        self.assertIn("referencias publicadas por fabricantes", disclaimer)
+        self.assertNotIn("provienen de páginas oficiales", disclaimer)
+
     def test_contact_prioritizes_whatsapp_and_has_accessible_errors(self):
         source = html("contacto.html")
         page = parsed_html("contacto.html")
@@ -256,7 +261,7 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(selector=selector):
                 self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
         self.assertRegex(styles, r"(?s)\.hero__media img\s*\{[^}]*height:\s*auto;")
-        self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*1175\s*/\s*448;")
+        self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*1600\s*/\s*659;")
 
     def test_services_follows_customer_decision_contract(self):
         source = html("servicios.html")
