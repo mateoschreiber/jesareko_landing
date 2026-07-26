@@ -569,7 +569,7 @@ h3 {
 
 .case-study {
   display: grid;
-  grid-template-columns: minmax(9rem, .34fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   padding-block: clamp(2rem, 5vw, 4rem);
   border-block-start: 1px solid var(--color-line);
@@ -579,7 +579,6 @@ h3 {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  min-height: 11rem;
   padding: var(--space-3);
   background: var(--color-brand-soft);
   color: var(--color-brand-dark);
@@ -1155,6 +1154,10 @@ h3 {
 }
 
 @media (min-width: 48rem) {
+  .case-study {
+    grid-template-columns: minmax(9rem, .34fr) minmax(0, 1fr);
+  }
+
   .service-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1253,14 +1256,9 @@ h3 {
   }
 
   .hero__grid,
-  .case-study,
   .contact-grid,
   .final-cta__inner {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .case-study__media {
-    min-height: 7rem;
   }
 
   .final-cta__actions {

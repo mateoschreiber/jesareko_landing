@@ -209,7 +209,15 @@ class ContentContractTests(unittest.TestCase):
 
         self.assertIn("Aplicaciones frecuentes", source)
         self.assertEqual(len(studies), 3)
-        self.assertIn("escenarios de trabajo", source.lower())
+        self.assertIn("Presentamos estas aplicaciones como escenarios de trabajo, no como proyectos ejecutados.", source)
+        self.assertEqual(
+            [study.children("div", "case-study__body")[0].children("h2")[0].text() for study in studies],
+            [
+                "Comercio con puntos ciegos",
+                "Vivienda con WiFi inestable",
+                "Oficina con accesos y documentación dispersos",
+            ],
+        )
         for study in studies:
             with self.subTest(case=study.text()):
                 self.assertEqual(len(study.children("div", "case-study__media")), 1)
@@ -228,3 +236,23 @@ class ContentContractTests(unittest.TestCase):
         for selector in (".case-study", ".case-study__media", ".case-study__body"):
             with self.subTest(selector=selector):
                 self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
+        study_rules = re.findall(r"(?ms)^[ \t]*\.case-study\s*\{(?P<body>.*?)^[ \t]*\}", styles)
+        self.assertEqual(len(study_rules), 2)
+        base = study_rules[0]
+        self.assertRegex(base, r"grid-template-columns:\s*minmax\(0,\s*1fr\);")
+        self.assertRegex(
+            styles,
+            r"(?s)@media\s*\(min-width:\s*48rem\).*?\.case-study\s*\{[^}]*grid-template-columns:\s*minmax\(9rem,\s*\.34fr\)\s+minmax\(0,\s*1fr\);",
+        )
+        case_component_rules = re.findall(r"(?ms)^[ \t]*\.case-study(?:__media|__body)?\s*\{(?P<body>.*?)^[ \t]*\}", styles)
+        self.assertNotRegex("".join(case_component_rules), r"(?:min-|max-)?height\s*:|overflow(?:-x)?\s*:")
+
+    def test_cases_metadata_describes_frequent_scenarios(self):
+        source = html("casos.html")
+        title = "Aplicaciones frecuentes de seguridad, WiFi y soporte | Jesareko"
+        description = "Aplicaciones frecuentes de seguridad, WiFi y soporte técnico para comercios, viviendas y oficinas en Encarnación e Itapúa."
+        self.assertIn(f"<title>{title}</title>", source)
+        self.assertEqual(source.count(f'content="{title}"'), 2)
+        self.assertEqual(source.count(f'content="{description}"'), 3)
+        self.assertIn(f'"description": "{description}"', source)
+        self.assertNotIn("resultados esperables", source.lower())
