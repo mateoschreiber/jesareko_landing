@@ -163,10 +163,10 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(status.attrs.get("role"), "status")
         self.assertEqual(status.attrs.get("aria-live"), "polite")
 
-    def test_contact_form_has_an_honest_no_javascript_fallback(self):
+    def test_contact_form_uses_a_secure_same_origin_action_and_keeps_a_no_javascript_fallback(self):
         page = parsed_html("contacto.html")
         form = next(node for node in page.find_all("form") if node.attrs.get("id") == "contactForm")
-        self.assertEqual(form.attrs.get("action"), "mailto:alemateo07@gmail.com")
+        self.assertEqual(form.attrs.get("action"), "/contacto")
         self.assertEqual(form.attrs.get("method"), "post")
         self.assertEqual(form.attrs.get("enctype"), "text/plain")
         self.assertNotIn("novalidate", form.attrs)
@@ -181,10 +181,6 @@ class ContentContractTests(unittest.TestCase):
                 page = parsed_html(page_name)
                 visible_regions = page.find_all("main") + page.find_all("footer")
                 self.assertNotIn("alemateo07@gmail.com", " ".join(region.text() for region in visible_regions))
-
-        contact = parsed_html("contacto.html")
-        form = next(node for node in contact.find_all("form") if node.attrs.get("id") == "contactForm")
-        self.assertEqual(form.attrs.get("action"), "mailto:alemateo07@gmail.com")
 
     def test_footer_is_reduced_to_three_compact_information_groups(self):
         for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html", "privacidad.html"):
