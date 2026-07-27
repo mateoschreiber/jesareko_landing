@@ -434,12 +434,13 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue({"product-editorial", "editorial-grid"}.issubset(product.attrs.get("class", "").split()))
                 self.assertEqual(len(product.children("figure", "product-editorial__media")), 1)
                 self.assertEqual(len(product.children("div", "product-editorial__copy")), 1)
+                element_children = [child for child in product.content if isinstance(child, HtmlNode)]
+                self.assertTrue(element_children[0].has_class("product-editorial__copy"))
+                self.assertTrue(element_children[1].has_class("product-editorial__media"))
 
-        alarm = next(
-            image for image in page.find_all("img")
-            if image.attrs.get("src") == "assets/img/brands/hikvision-ax-pro-alarm.webp"
-        )
-        self.assertTrue(alarm.parent.has_class("product-editorial__media--alarm"))
+        for product in products:
+            media = product.children("figure", "product-editorial__media")[0]
+            self.assertEqual(media.attrs.get("class", "").split(), ["product-editorial__media"])
 
     def test_technologies_covers_networks_and_support_without_unshown_promises(self):
         source = html("tecnologias.html")
@@ -472,5 +473,38 @@ class ContentContractTests(unittest.TestCase):
         self.assertRegex(base.group("body"), r"grid-template-columns:\s*minmax\(0,\s*1fr\);")
         self.assertRegex(
             styles,
-            r"(?s)@media\s*\(min-width:\s*48rem\).*?\.product-editorial\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1\.08fr\)\s+minmax\(0,\s*\.92fr\);",
+            r"(?s)@media\s*\(min-width:\s*52\.01rem\).*?\.product-editorial\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);",
+        )
+
+    def test_technology_media_uses_one_bounded_frame_for_every_aspect_ratio(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        media = re.search(r"(?ms)^\.product-editorial__media\s*\{(?P<body>.*?)^\}", styles)
+        image = re.search(r"(?ms)^\.product-editorial__media img\s*\{(?P<body>.*?)^\}", styles)
+        self.assertIsNotNone(media)
+        self.assertIsNotNone(image)
+        self.assertRegex(media.group("body"), r"display:\s*flex;")
+        self.assertRegex(media.group("body"), r"align-items:\s*center;")
+        self.assertRegex(media.group("body"), r"justify-content:\s*center;")
+        self.assertRegex(media.group("body"), r"height:\s*clamp\(13rem,\s*58vw,\s*20rem\);")
+        self.assertRegex(media.group("body"), r"overflow:\s*hidden;")
+        self.assertNotRegex(media.group("body"), r"aspect-ratio:")
+        self.assertRegex(image.group("body"), r"width:\s*auto;")
+        self.assertRegex(image.group("body"), r"max-width:\s*100%;")
+        self.assertRegex(image.group("body"), r"height:\s*auto;")
+        self.assertRegex(image.group("body"), r"max-height:\s*100%;")
+        self.assertRegex(image.group("body"), r"object-fit:\s*contain;")
+
+    def test_mobile_product_copy_precedes_its_matching_media(self):
+        styles = STYLES.read_text(encoding="utf-8")
+        media = re.search(r"(?ms)^\.product-editorial__media\s*\{(?P<body>.*?)^\}", styles)
+        copy = re.search(r"(?ms)^\.product-editorial__copy\s*\{(?P<body>.*?)^\}", styles)
+        self.assertRegex(media.group("body"), r"order:\s*2;")
+        self.assertRegex(copy.group("body"), r"order:\s*1;")
+        self.assertRegex(
+            styles,
+            r"(?s)@media\s*\(min-width:\s*52\.01rem\).*?\.product-editorial__media\s*\{[^}]*grid-column:\s*1;[^}]*grid-row:\s*1;",
+        )
+        self.assertRegex(
+            styles,
+            r"(?s)@media\s*\(min-width:\s*52\.01rem\).*?\.product-editorial__copy\s*\{[^}]*grid-column:\s*2;[^}]*grid-row:\s*1;",
         )
