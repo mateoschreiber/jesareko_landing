@@ -93,6 +93,12 @@ class SiteContractTests(unittest.TestCase):
         for asset in blocked_assets:
             with self.subTest(asset=asset):
                 self.assertNotIn(asset, published_html)
+                self.assertTrue((ROOT / asset).is_file())
+                self.assertFalse((PUBLIC / asset).exists())
+
+        public_brand_files = {path.name for path in (PUBLIC / "assets" / "img" / "brands").glob("*") if path.is_file()}
+        blocked_file_names = {Path(asset).name for asset in blocked_assets}
+        self.assertTrue(public_brand_files.isdisjoint(blocked_file_names))
 
     def test_every_page_uses_new_shared_shell(self):
         for page in PAGES:

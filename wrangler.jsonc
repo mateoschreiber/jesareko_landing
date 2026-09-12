@@ -3,8 +3,7 @@
   "name": "jesareko",
   "compatibility_date": "2026-05-01",
   "observability": {
-    "enabled": true,
-    "head_sampling_rate": 1
+    "enabled": false
   },
   "assets": {
     "directory": "./public",

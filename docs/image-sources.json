@@ -6,7 +6,7 @@
   "redistribution_authorization": "unverified",
   "images": [
     {
-      "local_file": "assets/img/brands/dahua-camera-lineup.webp",
+      "local_file": "docs/restricted-assets/dahua-camera-lineup.webp",
       "brand": "Dahua",
       "product": "Dahua surveillance camera lineup",
       "usage_context": "homepage_hero",
@@ -17,7 +17,7 @@
       "retrieved_on": "2026-07-26"
     },
     {
-      "local_file": "assets/img/brands/hikvision-camera-lineup.webp",
+      "local_file": "docs/restricted-assets/hikvision-camera-lineup.webp",
       "brand": "Hikvision",
       "product": "Hikvision surveillance camera lineup",
       "usage_context": "technologies_catalog",
@@ -28,7 +28,7 @@
       "retrieved_on": "2026-07-26"
     },
     {
-      "local_file": "assets/img/brands/hikvision-ax-pro-alarm.webp",
+      "local_file": "docs/restricted-assets/hikvision-ax-pro-alarm.webp",
       "brand": "Hikvision",
       "product": "AX PRO complete alarm system",
       "usage_context": "technologies_catalog",
@@ -39,7 +39,7 @@
       "retrieved_on": "2026-07-26"
     },
     {
-      "local_file": "assets/img/brands/dahua-asi3103f-access-controller.webp",
+      "local_file": "docs/restricted-assets/dahua-asi3103f-access-controller.webp",
       "brand": "Dahua",
       "product": "ASI3103F-MEW face recognition access controller",
       "usage_context": "technologies_catalog",
@@ -50,7 +50,7 @@
       "retrieved_on": "2026-07-26"
     },
     {
-      "local_file": "assets/img/brands/dahua-wizsense-dome-camera.webp",
+      "local_file": "docs/restricted-assets/dahua-wizsense-dome-camera.webp",
       "brand": "Dahua",
       "product": "IPC-HDBW3441F-AS-S2 WizSense dome camera",
       "usage_context": "technologies_catalog",

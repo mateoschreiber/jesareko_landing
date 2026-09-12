@@ -33,17 +33,19 @@
 4. En el firewall del servidor, permitir trafico 80/443 solo desde rangos IP oficiales de Cloudflare.
 5. Desactivar directory listing y bloquear archivos ocultos o extensiones sensibles.
 6. Revisar logs del servidor y Security Events de Cloudflare despues de publicar.
-7. Si se despliega con Workers Static Assets mediante `wrangler.jsonc`, validar que Workers Logs reciba datos con `observability.enabled = true` y revisar volumen/costo del muestreo configurado.
+7. Validar en Cloudflare Dashboard los controles operativos que no se expresan en este repositorio: Security Events, WAF/Bot protections, alertas, analytics, HTTPS/TLS, headers efectivos, retencion y responsable de revision.
 
 ## Observabilidad operativa
 
 - Security Events: confirmar en Cloudflare Dashboard que se generan y que alguien los revisa despues de cada publicacion.
+- WAF/Bot protections: activar managed rules o protecciones de bots cuando correspondan al plan y al riesgo observado.
 - Alertas: definir umbrales para picos de requests, paises/ASN anormales, user agents vacios y abuso de `/assets/*`.
-- Metricas: revisar trafico, errores, cache y rutas mas solicitadas con la frecuencia acordada.
+- Analytics: revisar trafico, errores, cache y rutas mas solicitadas con la frecuencia acordada.
+- HTTPS/TLS y headers efectivos: verificar despues de publicar que el modo TLS, HTTPS y `public/_headers` aplican como se espera.
 - Retencion: documentar cuanto tiempo se conservan eventos/logs segun el plan contratado.
 - Responsable: asignar una persona o rol para revision y respuesta.
 - Revision periodica: registrar fecha, hallazgos y ajustes realizados.
-- POST-DEPLOY VERIFICATION REQUIRED: el estado real de Security Events, alertas, metricas y retencion no puede verificarse desde este repositorio.
+- POST-DEPLOY VERIFICATION REQUIRED: el estado real de Security Events, WAF/Bot protections, alertas, analytics, HTTPS/TLS, headers efectivos y retencion no puede verificarse desde este repositorio.
 
 ## HSTS futuro
 

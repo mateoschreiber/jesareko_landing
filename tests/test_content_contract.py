@@ -456,6 +456,12 @@ class ContentContractTests(unittest.TestCase):
         for record in registry["images"]:
             with self.subTest(local_file=record["local_file"]):
                 self.assertNotIn(record["local_file"], public_html)
+                self.assertTrue((PUBLIC.parent / record["local_file"]).is_file())
+                self.assertFalse((PUBLIC / record["local_file"]).exists())
+
+        published_files = {path.name for path in (PUBLIC / "assets" / "img" / "brands").glob("*") if path.is_file()}
+        restricted_files = {Path(record["local_file"]).name for record in registry["images"]}
+        self.assertTrue(published_files.isdisjoint(restricted_files))
 
     def test_technologies_components_have_mobile_first_styles(self):
         styles = STYLES.read_text(encoding="utf-8")

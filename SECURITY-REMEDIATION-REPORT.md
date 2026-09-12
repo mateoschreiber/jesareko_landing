@@ -9,8 +9,8 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 | Hallazgo | Antes | Despues | Evidencia |
 | --- | --- | --- | --- |
 | SEC-001 | Datos del formulario se incorporaban a URLs de WhatsApp y `mailto:` | RESUELTO | `public/assets/js/main.js` usa `contactPrompt()` minimo; `tests/contact-query-runtime.mjs` valida que campos sensibles no aparezcan en URLs. |
-| SEC-002 | Assets con `publication_gate = blocked` estaban referenciados desde HTML publicable | MITIGADO | `public/index.html` y `public/tecnologias.html` usan visuales propios CSS/HTML; tests bloquean referencias a `docs/image-sources.json`. |
-| SEC-003 | `observability.enabled = false` y dashboard no verificable | MITIGADO + REQUIERE ACCION EXTERNA | `wrangler.jsonc` habilita observabilidad; docs agregan checklist de Security Events, alertas, metricas, retencion y responsable. |
+| SEC-002 | Assets con `publication_gate = blocked` estaban dentro de `public/` y referenciados desde HTML publicable | RESUELTO | Los binarios bloqueados se movieron a `docs/restricted-assets/`; tests comprueban que no existan dentro del directorio publicable ni en HTML. |
+| SEC-003 | Observabilidad/security logging no verificable desde repo; `observability.enabled = false` | REQUIERE ACCION EXTERNA | No hay Worker script/`main`; `wrangler.jsonc` conserva `observability.enabled = false` y la documentacion lista verificaciones de Cloudflare Dashboard. |
 | SEC-004 | HSTS sin `includeSubDomains`/`preload` | NO MODIFICAR / PRECONDICION NO VERIFICADA | Headers no se cambiaron; `README_SEGURIDAD.md` documenta checklist futura. |
 
 ## 3. SEC-001
@@ -22,18 +22,18 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 
 ## 4. SEC-002
 
-- Cambio: se retiraron de HTML publico las cinco referencias a `assets/img/brands/*`.
+- Cambio: se retiraron de HTML publico las cinco referencias a `assets/img/brands/*` y los cinco binarios bloqueados salieron de `public/`.
 - Sustitucion: se agregaron visuales propios con CSS/HTML, sin reproducir activos de fabricantes.
-- Registro: `docs/image-sources.json` conserva `blocked` y `unverified`; no se invento autorizacion.
-- Tests: el gate ahora falla si cualquier asset registrado queda referenciado desde HTML publicable.
-- Resultado: MITIGADO.
+- Registro: `docs/image-sources.json` conserva `blocked` y `unverified`, y ahora apunta a `docs/restricted-assets/*`; no se invento autorizacion.
+- Tests: el gate ahora falla si cualquier asset registrado queda referenciado desde HTML publicable o existe fisicamente dentro del directorio publicado.
+- Resultado: RESUELTO.
 
 ## 5. SEC-003
 
-- Cambio versionado: `wrangler.jsonc` ahora usa `observability.enabled = true` y `head_sampling_rate = 1`.
-- Base documental: Cloudflare Workers Logs documenta que `observability` persiste logs del Worker y que `head_sampling_rate` controla el porcentaje de requests registrados.
-- Limite: Security Events, alertas, metricas, retencion, costo real y utilidad post-deploy requieren Cloudflare Dashboard/deployment real.
-- Resultado: MITIGADO + REQUIERE ACCION EXTERNA.
+- Cambio versionado: se revirtio el cambio anterior; `wrangler.jsonc` conserva `observability.enabled = false`.
+- Base documental: Cloudflare documenta que `assets.directory` define los Static Assets y que Workers Logs/observability se orienta a logs del Worker. Este proyecto no declara Worker script/`main` ni logging propio, por lo que `head_sampling_rate = 1` no se mantiene solo por hardening aparente.
+- Limite: Security Events, WAF/managed rules, Bot protections, alertas, analytics, HTTPS/TLS, headers efectivos, retencion, costo real y responsable requieren Cloudflare Dashboard/deployment real.
+- Resultado: REQUIERE ACCION EXTERNA.
 
 ## 6. SEC-004
 
@@ -48,6 +48,8 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 - `SECURITY-REMEDIATION-REPORT.md`
 - `README_SEGURIDAD.md`
 - `deploy/cloudflare-rules.md`
+- `docs/image-sources.json`
+- `docs/restricted-assets/*`
 - `wrangler.jsonc`
 - `public/index.html`
 - `public/tecnologias.html`
@@ -66,29 +68,27 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 - `C:/Users/MaSch/AppData/Local/Programs/Python/Python312/python.exe -m unittest tests.test_content_contract.ContentContractTests.test_technologies_is_an_editorial_application_catalog` -> OK.
 - `C:/Users/MaSch/AppData/Local/Programs/Python/Python312/python.exe -m unittest discover -s tests` -> OK, 44 tests.
 - `rtk git diff --check` -> OK.
-- Static check `assets/img/brands` under `public/` -> OK, no public references.
+- Static check `assets/img/brands` under `public/` -> OK, no blocked/unverified files inside the public directory.
 - Static check HSTS `includeSubDomains`/`preload` in deployed header templates -> OK, not added.
 
 ## 9. Resultados
 
-- No quedan referencias publicas a assets bloqueados/no verificados.
+- No quedan referencias publicas ni archivos fisicos publicables de assets bloqueados/no verificados.
 - Las URLs generadas por el formulario no incluyen nombre, empresa, ciudad, servicio ni mensaje libre.
 - No se agregaron sinks DOM inseguros.
 - HSTS no se endurecio sin precondiciones.
-- Observabilidad versionada quedo habilitada para el flujo `wrangler`, con verificacion post-deploy pendiente.
+- Observabilidad por `wrangler` queda deshabilitada para este sitio static-assets-only; la deteccion operacional pasa a Cloudflare Dashboard.
 
 ## 10. Riesgos residuales
 
-- Los assets de fabricantes siguen presentes en `public/assets/img/brands/*`, pero no referenciados desde HTML publicable.
-- El estado real de Cloudflare Security Events/alertas/logs no puede verificarse sin dashboard/deploy.
-- `head_sampling_rate = 1` puede requerir ajuste operativo si el volumen/costo de Workers Logs lo demanda.
+- Los assets de fabricantes se conservan fuera de `public/` como evidencia restringida en `docs/restricted-assets/*`.
+- El estado real de Cloudflare Security Events, WAF/Bot protections, alertas, analytics, HTTPS/TLS, headers efectivos y retencion no puede verificarse sin dashboard/deploy.
 - HSTS `includeSubDomains`/`preload` queda pendiente hasta inventariar subdominios.
 
 ## 11. Acciones externas requeridas
 
 - Obtener autorizacion escrita o proveer activos propios si se quieren restaurar imagenes de fabricantes.
-- Confirmar en Cloudflare Dashboard: Security Events, alertas, metricas, retencion, responsable y revision periodica.
-- Revisar costo/volumen de Workers Logs despues del despliegue.
+- Confirmar en Cloudflare Dashboard: Security Events, WAF/managed rules cuando corresponda, Bot protections, alertas, analytics, HTTPS/TLS, headers efectivos, retencion, responsable y revision periodica.
 - Inventariar subdominios y validar HTTPS antes de cambiar HSTS.
 
 ## 12. Verificacion post-deploy
@@ -96,18 +96,18 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 POST-DEPLOY VERIFICATION REQUIRED:
 
 - Confirmar que headers reales se sirven como espera `public/_headers`.
-- Confirmar que Workers Logs recibe datos utiles para el deployment real si se usa `wrangler`.
-- Confirmar que Security Events y alertas estan activos en Cloudflare Dashboard.
-- Confirmar que no hay referencias publicas cacheadas a `assets/img/brands/*`.
+- Confirmar que Security Events, WAF/Bot protections, alertas y analytics estan activos en Cloudflare Dashboard.
+- Confirmar que no hay URLs publicas cacheadas para los antiguos `assets/img/brands/*`.
 
 ## 13. Rollback
 
 - SEC-001: restaurar el armado de mensajes anterior solo si se reemplaza por un canal con controles claros de privacidad.
-- SEC-002: restaurar assets de fabricantes solo con autorizacion documentada o reemplazarlos por activos propios registrados.
-- SEC-003: volver `observability.enabled` a `false` o bajar `head_sampling_rate` si el costo/retencion no es aceptable.
+- SEC-002: restaurar assets de fabricantes dentro de `public/` solo con autorizacion documentada o reemplazarlos por activos propios registrados.
+- SEC-003: habilitar `observability` solo si se agrega Worker script/telemetria util y se define un muestreo respaldado por necesidad operativa.
 - SEC-004: no hay rollback de headers porque no se modificaron.
 
 ## 14. Fuentes oficiales consultadas
 
 - Cloudflare Workers Wrangler configuration: https://developers.cloudflare.com/workers/wrangler/configuration/
+- Cloudflare Workers Static Assets: https://developers.cloudflare.com/workers/static-assets/
 - Cloudflare Workers Logs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
