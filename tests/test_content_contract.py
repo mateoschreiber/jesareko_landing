@@ -144,10 +144,9 @@ class ContentContractTests(unittest.TestCase):
         self.assertIn('class="contact-primary ', source)
         self.assertLess(source.index('class="contact-primary '), source.index('id="contactForm"'))
         self.assertLess(source.index('id="sendWhatsApp"'), source.index('id="sendEmail"'))
-        phone_links = [link for link in page.find_all("a", "contact-phone") if link.attrs.get("href") == "tel:+595971141032"]
-        self.assertEqual(len(phone_links), 1)
-        phone = phone_links[0]
-        self.assertEqual(phone.text(), "+595 971 141 032")
+        self.assertEqual(page.find_all("a", "contact-phone"), [])
+        self.assertNotIn("tel:", source)
+        self.assertNotIn("+595 971 141 032", source)
         self.assertEqual(form.find_all("input"), [])
         self.assertEqual(form.find_all("textarea"), [])
         self.assertEqual(form.find_all("select"), [])
@@ -217,12 +216,11 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(page=page.name):
                 self.assertNotIn("?servicio=", page.read_text(encoding="utf-8"))
 
-    def test_contact_phone_has_a_full_touch_target(self):
-        styles = STYLES.read_text(encoding="utf-8")
-        rule = re.search(r"(?s)\.contact-phone\s*\{(?P<body>[^}]*)\}", styles)
-        self.assertIsNotNone(rule)
-        self.assertRegex(rule.group("body"), r"display:\s*inline-flex;")
-        self.assertRegex(rule.group("body"), r"min-height:\s*3rem;")
+    def test_contact_does_not_expose_a_direct_phone_link(self):
+        source = html("contacto.html")
+        self.assertNotIn("tel:", source)
+        self.assertNotIn('class="contact-phone"', source)
+        self.assertNotIn("+595 971 141 032", source)
 
     def test_homepage_follows_approved_narrative(self):
         source = html("index.html")
