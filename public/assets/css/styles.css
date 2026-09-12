@@ -107,6 +107,11 @@ button {
   box-shadow: 0 0 0 6px var(--color-brand-dark);
 }
 
+a:active,
+button:active {
+  opacity: .88;
+}
+
 h1,
 h2,
 h3,
@@ -301,6 +306,10 @@ h3 {
 
 .btn:hover {
   transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn--primary {

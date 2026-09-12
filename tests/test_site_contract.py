@@ -189,6 +189,17 @@ class SiteContractTests(unittest.TestCase):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(len(re.findall(r"(?m)^\.btn\s*\{", css)), 1)
 
+    def test_interactive_controls_have_subtle_active_feedback(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+
+        controls = re.search(r"(?ms)^a:active,\s*^button:active\s*\{(?P<body>.*?)^\}", css)
+        self.assertIsNotNone(controls)
+        self.assertRegex(controls.group("body"), r"opacity:\s*\.88;")
+
+        button = re.search(r"(?ms)^\.btn:active\s*\{(?P<body>.*?)^\}", css)
+        self.assertIsNotNone(button)
+        self.assertRegex(button.group("body"), r"transform:\s*translateY\(0\);")
+
     def test_mobile_menu_escape_restores_focus(self):
         runtime_test = Path(__file__).with_name("nav-menu-runtime.mjs")
         result = subprocess.run(

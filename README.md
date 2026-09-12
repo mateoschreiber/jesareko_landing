@@ -51,6 +51,10 @@ La revisión responsive se realiza en las seis páginas, a 320, 360, 390, 430, 7
 
 Antes de publicar, comprobar navegación, formulario, enlaces de WhatsApp/correo, vista móvil y consola del navegador.
 
+### Nota sobre las imágenes de Tecnologías
+
+Chrome DevTools puede mostrar un issue para las cuatro imágenes con `loading="lazy"` de la página Tecnologías. Cada una conserva atributos `width` y `height`, y su contenedor reserva altura. La traza de rendimiento móvil a 390 px, recorriendo las cuatro tarjetas, registró CLS `0.00`; tratar ese issue como falso positivo mientras se mantengan esas condiciones.
+
 ## Despliegue
 
 ### Cloudflare Pages
