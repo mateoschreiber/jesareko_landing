@@ -190,6 +190,32 @@ class SiteContractTests(unittest.TestCase):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(css.count("@media (max-width: 52rem)"), 1)
 
+    def test_shared_layout_contract_reserves_sticky_header_space(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+
+        for token in ("--header-height", "--container-max", "--page-gutter"):
+            with self.subTest(token=token):
+                self.assertIn(token, css)
+
+        self.assertIn("scroll-padding-top: var(--header-height)", css)
+        self.assertNotIn("scroll-margin-top: 6rem", css)
+
+    def test_visual_controls_use_semantic_state_tokens(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+
+        for token in ("--color-focus", "--color-error", "--control-height", "--transition-fast"):
+            with self.subTest(token=token):
+                self.assertIn(token, css)
+
+        self.assertNotIn("border-color: #aa342d !important", css)
+
+    def test_reveal_animation_does_not_hide_content_before_intersection(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        reveal = re.search(r"(?ms)^\.js \.reveal-item\s*\{(?P<body>.*?)^\}", css)
+
+        self.assertIsNotNone(reveal)
+        self.assertNotRegex(reveal.group("body"), r"opacity:\s*0")
+
     def test_button_has_one_canonical_definition(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(len(re.findall(r"(?m)^\.btn\s*\{", css)), 1)
