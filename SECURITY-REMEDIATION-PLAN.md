@@ -27,7 +27,7 @@ Se modificaran solo archivos directamente relacionados con SEC-001 a SEC-004. No
 
 - Estado actual: Confirmado.
 - Evidencia: `docs/image-sources.json` bloquea publicacion y mantiene autorizacion no verificada; HTML publico referencia cinco assets bajo `assets/img/brands/*`; el test existente solo comprueba que el bloqueo este documentado, no que impida publicacion.
-- Cambio propuesto: retirar referencias publicas a los assets bloqueados y reemplazarlas por placeholders CSS/HTML propios, sin tocar los archivos de imagen ni marcar autorizaciones como verificadas. Reforzar `tests/test_content_contract.py` para fallar si un asset bloqueado/no verificado queda referenciado desde HTML publicable.
+- Cambio propuesto: retirar referencias publicas a los assets bloqueados y reemplazarlas por recursos visuales propios, sin tocar los archivos de imagen restringidos ni marcar autorizaciones como verificadas. Reforzar `tests/test_content_contract.py` para fallar si un asset bloqueado/no verificado queda referenciado desde HTML publicable.
 - Archivos afectados: `public/index.html`, `public/tecnologias.html`, `public/assets/css/styles.css`, `tests/test_content_contract.py`.
 - Riesgo del cambio: bajo a medio; cambia piezas visuales en hero/catalogo, pero mantiene la arquitectura estatica y copy tecnico.
 - Pruebas: content contract, validacion de referencias de assets, suite completa.

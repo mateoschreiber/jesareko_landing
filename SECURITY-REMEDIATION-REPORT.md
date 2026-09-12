@@ -23,7 +23,7 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 ## 4. SEC-002
 
 - Cambio: se retiraron de HTML publico las cinco referencias a `assets/img/brands/*` y los cinco binarios bloqueados salieron de `public/`.
-- Sustitucion: se agregaron visuales propios con CSS/HTML, sin reproducir activos de fabricantes.
+- Sustitucion: se agregaron recursos visuales propios con CSS/HTML e imagenes originales, sin reproducir activos de fabricantes.
 - Registro: `docs/image-sources.json` conserva `blocked` y `unverified`, y ahora apunta a `docs/restricted-assets/*`; no se invento autorizacion.
 - Tests: el gate ahora falla si cualquier asset registrado queda referenciado desde HTML publicable o existe fisicamente dentro del directorio publicado.
 - Resultado: RESUELTO.

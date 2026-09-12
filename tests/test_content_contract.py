@@ -132,6 +132,7 @@ class ContentContractTests(unittest.TestCase):
         disclaimer = next(node for node in technologies.find_all("p", "asset-disclaimer")).text().lower()
         self.assertIn("recursos propios", disclaimer)
         self.assertIn("no reproducen activos de fabricantes", disclaimer)
+        self.assertNotIn("marcas mencionadas", disclaimer)
         self.assertNotIn("referencias publicadas por fabricantes", disclaimer)
         self.assertNotIn("provienen de páginas oficiales", disclaimer)
 
@@ -234,6 +235,9 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(hero.count("<p>"), 1)
         self.assertEqual(hero.count('class="btn btn--primary"'), 1)
         self.assertEqual(cases.count("<article>"), 3)
+        evidence = source[positions[2]:positions[3]]
+        self.assertIn('class="application-list"', evidence)
+        self.assertNotRegex(evidence, r"(?i)hikvision|dahua")
         self.assertIn('<p class="eyebrow">Encarnación · Itapúa</p>', hero)
         for forbidden in ("chip-list", "dashboard", "metric-grid", "metric-card", "service-card__icon"):
             with self.subTest(forbidden=forbidden):
@@ -247,7 +251,7 @@ class ContentContractTests(unittest.TestCase):
             ".service-row",
             ".service-row__item",
             ".technology-proof",
-            ".brand-list",
+            ".application-list",
             ".process-section",
             ".process-list",
             ".case-preview",
@@ -407,8 +411,8 @@ class ContentContractTests(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            [product.children("div", "product-editorial__copy")[0].children("span", "brand-wordmark")[0].text() for product in products],
-            ["Hikvision", "Hikvision", "Dahua", "Dahua"],
+            [product.children("div", "product-editorial__copy")[0].children("span", "application-kicker")[0].text() for product in products],
+            ["Cobertura visual", "Detección preventiva", "Acceso administrado", "Operación integrada"],
         )
         for product in products:
             with self.subTest(product=product.text()):
@@ -433,6 +437,11 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual([capability.children("h2")[0].text() for capability in capabilities], ["Redes y WiFi", "Soporte técnico"])
         self.assertIn("cobertura", capabilities[0].text().lower())
         self.assertIn("documentación", capabilities[1].text().lower())
+        for capability in capabilities:
+            with self.subTest(capability=capability.children("h2")[0].text()):
+                image = capability.children("img")[0]
+                self.assertTrue(image.attrs.get("src", "").startswith("assets/img/technology-"))
+                self.assertTrue((PUBLIC / image.attrs["src"]).is_file())
         for promise in ("detección de incendio", "monitoreo"):
             with self.subTest(promise=promise):
                 self.assertNotIn(promise, source.lower())
@@ -459,7 +468,7 @@ class ContentContractTests(unittest.TestCase):
             ".product-editorial",
             ".product-editorial__media",
             ".product-editorial__copy",
-            ".brand-wordmark",
+            ".application-kicker",
         ):
             with self.subTest(selector=selector):
                 self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
@@ -469,6 +478,10 @@ class ContentContractTests(unittest.TestCase):
         self.assertRegex(
             styles,
             r"(?s)@media\s*\(min-width:\s*52\.01rem\).*?\.product-editorial\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);",
+        )
+        self.assertRegex(
+            styles,
+            r"(?s)@media\s*\(min-width:\s*52\.01rem\).*?\.technology-capabilities\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);",
         )
 
     def test_technology_media_uses_one_bounded_frame_for_every_aspect_ratio(self):

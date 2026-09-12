@@ -454,14 +454,14 @@ h3 {
   color: var(--color-ink-soft);
 }
 
-.brand-list {
+.application-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-self: center;
   border-block-start: 1px solid var(--color-line);
 }
 
-.brand-list span {
+.application-list span {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -684,7 +684,7 @@ h3 {
   border-inline-start: 3px solid var(--color-brand);
 }
 
-.brand-wordmark {
+.application-kicker {
   display: inline-block;
   margin-block-end: var(--space-2);
   color: var(--color-brand);
@@ -811,19 +811,28 @@ h3 {
 }
 
 .technology-capability {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
   min-width: 0;
-  padding: var(--space-3);
+  overflow: hidden;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   background: var(--color-canvas);
 }
 
+.technology-capability > img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
 .technology-capability h2 {
+  margin: var(--space-3) var(--space-3) var(--space-1);
   font-size: var(--font-size-h3);
 }
 
-.technology-capability p:last-child {
-  margin-bottom: 0;
+.technology-capability p {
+  margin: 0 var(--space-3) var(--space-3);
   color: var(--color-ink-soft);
 }
 
@@ -1102,6 +1111,10 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .technology-capabilities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .product-editorial__media {
     grid-column: 1;
     grid-row: 1;
@@ -1244,10 +1257,6 @@ h3 {
   .product-editorial {
     gap: var(--space-5);
     padding-block: var(--section-space);
-  }
-
-  .product-editorial__media {
-    padding: var(--space-4);
   }
 
   .diagnostic-cta {
