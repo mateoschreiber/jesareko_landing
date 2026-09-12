@@ -111,32 +111,24 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(page=page):
                 self.assertIn("https://wa.me/595971141032", html(page))
 
-    def test_requested_camera_lineups_are_used_in_primary_visual_positions(self):
+    def test_blocked_brand_assets_are_replaced_by_owned_visuals(self):
         homepage = parsed_html("index.html")
         hero = next(node for node in homepage.find_all("figure", "hero__media"))
-        hero_image = hero.find_all("img")[0]
-        self.assertEqual(hero_image.attrs.get("src"), "assets/img/brands/dahua-camera-lineup.webp")
-        self.assertEqual((hero_image.attrs.get("width"), hero_image.attrs.get("height")), ("1600", "659"))
+        self.assertTrue(hero.has_class("hero__media--system"))
+        self.assertFalse(hero.find_all("img"))
 
         technologies = parsed_html("tecnologias.html")
-        hikvision_image = next(
-            image for image in technologies.find_all("img")
-            if image.attrs.get("src") == "assets/img/brands/hikvision-camera-lineup.webp"
-        )
-        self.assertEqual((hikvision_image.attrs.get("width"), hikvision_image.attrs.get("height")), ("1000", "347"))
-
-        registry = json.loads((PUBLIC.parent / "docs" / "image-sources.json").read_text(encoding="utf-8"))
-        records = {record["local_file"]: record for record in registry["images"]}
-        for local_file in (
-            "assets/img/brands/dahua-camera-lineup.webp",
-            "assets/img/brands/hikvision-camera-lineup.webp",
-        ):
-            with self.subTest(local_file=local_file):
-                self.assertEqual(records[local_file]["source_type"], "user_provided_upload")
+        product_media = technologies.find_all("figure", "product-editorial__media")
+        self.assertEqual(len(product_media), 4)
+        for media in product_media:
+            with self.subTest(label=media.attrs.get("aria-label")):
+                self.assertTrue(media.has_class("product-editorial__media--system"))
+                self.assertFalse(media.find_all("img"))
 
         disclaimer = next(node for node in technologies.find_all("p", "asset-disclaimer")).text().lower()
-        self.assertIn("aportado por el propietario del sitio", disclaimer)
-        self.assertIn("referencias publicadas por fabricantes", disclaimer)
+        self.assertIn("recursos propios", disclaimer)
+        self.assertIn("no reproducen activos de fabricantes", disclaimer)
+        self.assertNotIn("referencias publicadas por fabricantes", disclaimer)
         self.assertNotIn("provienen de páginas oficiales", disclaimer)
 
     def test_contact_prioritizes_whatsapp_and_has_accessible_errors(self):
@@ -440,7 +432,9 @@ class ContentContractTests(unittest.TestCase):
 
         for product in products:
             media = product.children("figure", "product-editorial__media")[0]
-            self.assertEqual(media.attrs.get("class", "").split(), ["product-editorial__media"])
+            classes = media.attrs.get("class", "").split()
+            self.assertIn("product-editorial__media", classes)
+            self.assertIn("product-editorial__media--system", classes)
 
     def test_technologies_covers_networks_and_support_without_unshown_promises(self):
         source = html("tecnologias.html")
@@ -454,9 +448,14 @@ class ContentContractTests(unittest.TestCase):
                 self.assertNotIn(promise, source.lower())
 
     def test_image_source_registry_blocks_publication_without_redistribution_authorization(self):
-        registry = (PUBLIC.parent / "docs" / "image-sources.json").read_text(encoding="utf-8")
-        self.assertIn('"status": "blocked"', registry)
-        self.assertIn('"redistribution_authorization": "unverified"', registry)
+        registry = json.loads((PUBLIC.parent / "docs" / "image-sources.json").read_text(encoding="utf-8"))
+        self.assertEqual(registry["publication_gate"]["status"], "blocked")
+        self.assertEqual(registry["redistribution_authorization"], "unverified")
+
+        public_html = "\n".join(path.read_text(encoding="utf-8") for path in PUBLIC.glob("*.html"))
+        for record in registry["images"]:
+            with self.subTest(local_file=record["local_file"]):
+                self.assertNotIn(record["local_file"], public_html)
 
     def test_technologies_components_have_mobile_first_styles(self):
         styles = STYLES.read_text(encoding="utf-8")

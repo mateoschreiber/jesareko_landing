@@ -45,6 +45,9 @@
 - Crear reglas separadas para bloquear user agents vacios o evidentemente automatizados solo si aparecen en logs.
 
 ## Observabilidad
-- Revisar Security Events despues de publicar.
-- Monitorear picos por pais, ASN, user agent y path.
+- Para despliegues con Workers Static Assets mediante `wrangler.jsonc`, mantener `observability.enabled = true` y revisar el volumen de Workers Logs despues del primer deploy. Cloudflare documenta que Workers Logs persiste logs del Worker y que `head_sampling_rate` controla el porcentaje de requests registrados: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+- Confirmar en Cloudflare Dashboard que Security Events esta disponible y se revisa despues de publicar.
+- Configurar alertas operativas para picos anormales por pais, ASN, user agent y path cuando el plan de Cloudflare lo permita.
+- Definir responsable, frecuencia de revision y retencion esperada de eventos/logs.
 - Mantener una regla temporal documentada para modo ataque y retirarla cuando el trafico vuelva a la normalidad.
+- POST-DEPLOY VERIFICATION REQUIRED: confirmar que el deployment real genera eventos/logs utiles y que el costo/retencion coincide con el plan contratado.

@@ -185,23 +185,23 @@ if (contactForm) {
     };
   }
 
-  function message(data) {
-    return ["Hola Jesareko, quiero consultar por una revisión técnica.", "", `Nombre: ${data.name}`, `Empresa u organización: ${data.company || "No indicada"}`, `Ciudad: ${data.city}`, `Servicio de interés: ${data.service}`, "", "Mensaje:", data.message].join("\n");
+  function contactPrompt() {
+    return "Hola Jesareko, quisiera solicitar información técnica.";
   }
 
   document.getElementById("sendWhatsApp")?.addEventListener("click", () => {
     const data = validate();
     if (!data) return;
-    formStatus.textContent = "Abriendo WhatsApp con el mensaje preparado.";
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message(data))}`, "_blank", "noopener,noreferrer");
+    formStatus.textContent = "Abriendo WhatsApp con un saludo mínimo.";
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(contactPrompt())}`, "_blank", "noopener,noreferrer");
   });
 
   contactForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = validate();
     if (!data) return;
-    formStatus.textContent = "Abriendo el cliente de correo con el mensaje preparado.";
-    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(`Consulta técnica - ${data.service}`)}&body=${encodeURIComponent(message(data))}`;
+    formStatus.textContent = "Abriendo el cliente de correo con un cuerpo mínimo.";
+    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Consulta técnica")}&body=${encodeURIComponent(contactPrompt())}`;
   });
 
   ["name", "company", "city", "service", "message"].forEach((fieldName) => {

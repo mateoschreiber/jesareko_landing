@@ -33,6 +33,28 @@
 4. En el firewall del servidor, permitir trafico 80/443 solo desde rangos IP oficiales de Cloudflare.
 5. Desactivar directory listing y bloquear archivos ocultos o extensiones sensibles.
 6. Revisar logs del servidor y Security Events de Cloudflare despues de publicar.
+7. Si se despliega con Workers Static Assets mediante `wrangler.jsonc`, validar que Workers Logs reciba datos con `observability.enabled = true` y revisar volumen/costo del muestreo configurado.
+
+## Observabilidad operativa
+
+- Security Events: confirmar en Cloudflare Dashboard que se generan y que alguien los revisa despues de cada publicacion.
+- Alertas: definir umbrales para picos de requests, paises/ASN anormales, user agents vacios y abuso de `/assets/*`.
+- Metricas: revisar trafico, errores, cache y rutas mas solicitadas con la frecuencia acordada.
+- Retencion: documentar cuanto tiempo se conservan eventos/logs segun el plan contratado.
+- Responsable: asignar una persona o rol para revision y respuesta.
+- Revision periodica: registrar fecha, hallazgos y ajustes realizados.
+- POST-DEPLOY VERIFICATION REQUIRED: el estado real de Security Events, alertas, metricas y retencion no puede verificarse desde este repositorio.
+
+## HSTS futuro
+
+No agregar `includeSubDomains` ni `preload` hasta completar esta checklist:
+
+1. Inventariar todos los subdominios.
+2. Comprobar HTTPS valido en todos.
+3. Confirmar que ninguno requiere HTTP.
+4. Evaluar impacto de `includeSubDomains`.
+5. Evaluar requisitos e impacto de `preload`.
+6. Cambiar HSTS solo despues de validar las precondiciones.
 
 ## Checklist anti-DDoS
 - Proxy naranja activo.

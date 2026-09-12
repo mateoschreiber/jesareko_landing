@@ -80,20 +80,19 @@ class SiteContractTests(unittest.TestCase):
                     used.add(src)
         self.assertTrue(used.issubset(registered))
 
-    def test_every_technology_catalog_asset_is_used_in_an_editorial_product(self):
+    def test_blocked_technology_catalog_assets_are_not_published(self):
         registry = json.loads((ROOT / "docs" / "image-sources.json").read_text(encoding="utf-8"))
-        catalog_assets = {
+        blocked_assets = {
             item["local_file"]
             for item in registry["images"]
-            if item["usage_context"] == "technologies_catalog"
+            if registry["publication_gate"]["status"] == "blocked"
+            or registry["redistribution_authorization"] == "unverified"
         }
-        editorial_assets = {
-            image["src"]
-            for image in parse_page("tecnologias.html").product_editorial_images
-            if "assets/img/brands/" in image.get("src", "")
-        }
+        published_html = "\n".join((PUBLIC / page).read_text(encoding="utf-8") for page in PAGES)
 
-        self.assertEqual(catalog_assets, editorial_assets)
+        for asset in blocked_assets:
+            with self.subTest(asset=asset):
+                self.assertNotIn(asset, published_html)
 
     def test_every_page_uses_new_shared_shell(self):
         for page in PAGES:
