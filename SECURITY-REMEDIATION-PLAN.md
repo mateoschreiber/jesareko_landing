@@ -39,7 +39,7 @@ Se modificaran solo archivos directamente relacionados con SEC-001 a SEC-004. No
 
 - Estado actual: Confirmado.
 - Evidencia: `message(data)` concatena todos los campos y se usa en `wa.me` y `mailto:`; la UI afirma que los datos se envian por WhatsApp o correo.
-- Cambio propuesto: mantener validacion y campos, pero usar mensajes prellenados minimos: servicio permitido y texto generico sin nombre, empresa, ciudad ni mensaje libre. Ajustar copy para indicar que los detalles quedan en el formulario y no se transfieren automaticamente. Agregar aviso breve de servicios externos. Actualizar privacidad.
+- Cambio aplicado: retirar la captura de datos y mantener solo canales con mensajes prellenados minimos. El sitio no pide nombre, empresa, ciudad, servicio ni mensaje libre, y la politica de privacidad describe el flujo de contacto externo.
 - Archivos afectados: `public/assets/js/main.js`, `public/contacto.html`, `public/privacidad.html`, tests relacionados.
 - Riesgo del cambio: bajo; conserva el flujo de contacto y reduce exposicion de datos en URLs.
 - Pruebas: tests de contacto, busquedas dirigidas de URL/body, suite completa.

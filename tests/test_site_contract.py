@@ -112,15 +112,15 @@ class SiteContractTests(unittest.TestCase):
                 source = (PUBLIC / page).read_text(encoding="utf-8")
                 self.assertIn('aria-controls="primaryMenu"', source)
 
-    def test_required_service_field_uses_native_select_without_overlay(self):
+    def test_contact_does_not_collect_personal_details_with_form_widgets(self):
         parsed = parse_page("contacto.html")
-        service_selects = [select for select in parsed.selects if select.get("name") == "service"]
 
         self.assertEqual(parsed.dialog_count, 0)
         self.assertFalse(any(token.startswith("service-picker") for token in parsed.class_tokens))
-        self.assertEqual(len(service_selects), 1)
-        self.assertNotEqual(service_selects[0].get("aria-hidden"), "true")
-        self.assertNotEqual(service_selects[0].get("tabindex"), "-1")
+        self.assertEqual(parsed.selects, [])
+        source = (PUBLIC / "contacto.html").read_text(encoding="utf-8")
+        self.assertNotIn("<input", source)
+        self.assertNotIn("<textarea", source)
 
     def test_whatsapp_uses_symbol_not_emoji(self):
         for page in PAGES:
@@ -190,15 +190,17 @@ class SiteContractTests(unittest.TestCase):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(css.count("@media (max-width: 52rem)"), 1)
 
-    def test_shared_layout_contract_reserves_sticky_header_space(self):
+    def test_shared_layout_contract_uses_a_non_overlapping_header(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
 
         for token in ("--header-height", "--container-max", "--page-gutter"):
             with self.subTest(token=token):
                 self.assertIn(token, css)
 
-        self.assertIn("scroll-padding-top: var(--header-height)", css)
-        self.assertNotIn("scroll-margin-top: 6rem", css)
+        header = re.search(r"(?ms)^\.site-header\s*\{(?P<body>.*?)^\}", css)
+        self.assertIsNotNone(header)
+        self.assertRegex(header.group("body"), r"position:\s*relative;")
+        self.assertNotRegex(header.group("body"), r"position:\s*sticky;")
 
     def test_visual_controls_use_semantic_state_tokens(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")

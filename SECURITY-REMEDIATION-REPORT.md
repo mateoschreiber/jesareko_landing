@@ -8,7 +8,7 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 
 | Hallazgo | Antes | Despues | Evidencia |
 | --- | --- | --- | --- |
-| SEC-001 | Datos del formulario se incorporaban a URLs de WhatsApp y `mailto:` | RESUELTO | `public/assets/js/main.js` usa `contactPrompt()` minimo; `tests/contact-query-runtime.mjs` valida que campos sensibles no aparezcan en URLs. |
+| SEC-001 | Datos del formulario se incorporaban a URLs de WhatsApp y `mailto:` | RESUELTO | `public/contacto.html` no solicita datos personales ni detalles de infraestructura; `public/assets/js/main.js` usa un mensaje general y `tests/contact-query-runtime.mjs` valida las URLs. |
 | SEC-002 | Assets con `publication_gate = blocked` estaban dentro de `public/` y referenciados desde HTML publicable | RESUELTO | Los binarios bloqueados se movieron a `docs/restricted-assets/`; tests comprueban que no existan dentro del directorio publicable ni en HTML. |
 | SEC-003 | Observabilidad/security logging no verificable desde repo; `observability.enabled = false` | REQUIERE ACCION EXTERNA | No hay Worker script/`main`; `wrangler.jsonc` conserva `observability.enabled = false` y la documentacion lista verificaciones de Cloudflare Dashboard. |
 | SEC-004 | HSTS sin `includeSubDomains`/`preload` | NO MODIFICAR / PRECONDICION NO VERIFICADA | Headers no se cambiaron; `README_SEGURIDAD.md` documenta checklist futura. |
@@ -16,8 +16,8 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 ## 3. SEC-001
 
 - Cambio: WhatsApp y correo preparan solo `Hola Jesareko, quisiera solicitar informacion tecnica.` con subject generico para correo.
-- UI: el formulario aclara que los detalles quedan en el formulario y agrega aviso sobre WhatsApp/correo como servicios externos.
-- Privacidad: se documento que esos detalles no se envian automaticamente en el texto prellenado.
+- UI: se retiro la captura de nombre, empresa, ciudad, servicio y mensaje; el panel explica que los canales se abren con un mensaje general.
+- Privacidad: `public/privacidad.html` documenta que el sitio no almacena datos personales ni los transfiere desde sus botones.
 - Resultado: RESUELTO.
 
 ## 4. SEC-002
@@ -74,7 +74,7 @@ Se convirtio `SECURITY-AUDIT.md` en un plan de accion y se aplicaron mitigacione
 ## 9. Resultados
 
 - No quedan referencias publicas ni archivos fisicos publicables de assets bloqueados/no verificados.
-- Las URLs generadas por el formulario no incluyen nombre, empresa, ciudad, servicio ni mensaje libre.
+- Las URLs generadas por los botones de contacto no incluyen datos personales, servicio ni mensaje libre.
 - No se agregaron sinks DOM inseguros.
 - HSTS no se endurecio sin precondiciones.
 - Observabilidad por `wrangler` queda deshabilitada para este sitio static-assets-only; la deteccion operacional pasa a Cloudflare Dashboard.

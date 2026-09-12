@@ -1,14 +1,6 @@
 const WHATSAPP_NUMBER = "595971141032";
 const EMAIL_TO = "alemateo07@gmail.com";
-const FIELD_LIMITS = { name: 80, company: 100, city: 80, message: 1000 };
-const ALLOWED_SERVICES = new Set([
-  "Revisión técnica / diagnóstico",
-  "Redes y WiFi",
-  "CCTV, alarmas, accesos e incendio",
-  "Soporte e infraestructura",
-  "Web, monitoreo y automatización",
-  "Otro"
-]);
+const CONTACT_PROMPT = "Hola Jesareko, quisiera solicitar información técnica.";
 
 const header = document.getElementById("siteHeader");
 const navToggle = document.getElementById("navToggle");
@@ -122,98 +114,15 @@ accordionButtons.forEach((button, index) => {
 });
 
 if (contactForm) {
-  contactForm.noValidate = true;
   const formStatus = document.getElementById("formStatus");
-  const serviceSelect = contactForm.elements.service;
-  const normalize = (value, limit, multiline = false) => String(value || "")
-    .normalize("NFC")
-    .replace(multiline ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, "")
-    .replace(multiline ? /\r\n?/g : /\s+/g, multiline ? "\n" : " ")
-    .split("\n").map((line) => line.replace(/[ \t]+/g, " ").trim()).join("\n").trim().slice(0, limit);
-
-  function clearFieldError(fieldName) {
-    const control = contactForm.elements[fieldName];
-    control?.classList.remove("is-invalid");
-    control?.removeAttribute("aria-invalid");
-    control?.removeAttribute("aria-describedby");
-    contactForm.querySelector(`[data-error-for="${fieldName}"]`)?.replaceChildren();
-  }
-
-  function values() {
-    const data = new FormData(contactForm);
-    return {
-      name: normalize(data.get("name"), FIELD_LIMITS.name),
-      company: normalize(data.get("company"), FIELD_LIMITS.company),
-      city: normalize(data.get("city"), FIELD_LIMITS.city),
-      service: normalize(data.get("service"), 60),
-      message: normalize(data.get("message"), FIELD_LIMITS.message, true)
-    };
-  }
-
-  function validate() {
-    const data = values();
-    const errors = getErrors(data);
-    for (const [fieldName, message] of Object.entries(errors)) {
-      const control = contactForm.elements[fieldName];
-      const error = contactForm.querySelector(`[data-error-for="${fieldName}"]`);
-      control.classList.toggle("is-invalid", Boolean(message));
-      if (message && error) {
-        control.setAttribute("aria-invalid", "true");
-        control.setAttribute("aria-describedby", error.id);
-      } else {
-        control.removeAttribute("aria-invalid");
-        control.removeAttribute("aria-describedby");
-      }
-      if (error) error.textContent = message;
-    }
-    const invalid = Object.keys(errors).find((fieldName) => errors[fieldName]);
-    if (invalid) {
-      contactForm.elements[invalid].focus();
-      formStatus.textContent = "Revise los campos marcados antes de enviar.";
-      return null;
-    }
-    formStatus.textContent = "";
-    return data;
-  }
-
-  function getErrors(data) {
-    return {
-      name: data.name ? "" : "Indique su nombre para poder responder.",
-      city: data.city ? "" : "Indique la ciudad donde está la infraestructura.",
-      service: ALLOWED_SERVICES.has(data.service) ? "" : "Seleccione el servicio de interés.",
-      message: data.message ? "" : "Cuente brevemente qué necesita mejorar."
-    };
-  }
-
-  function contactPrompt() {
-    return "Hola Jesareko, quisiera solicitar información técnica.";
-  }
 
   document.getElementById("sendWhatsApp")?.addEventListener("click", () => {
-    const data = validate();
-    if (!data) return;
-    formStatus.textContent = "Abriendo WhatsApp con un saludo mínimo.";
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(contactPrompt())}`, "_blank", "noopener,noreferrer");
+    formStatus.textContent = "Abriendo WhatsApp con un saludo general.";
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(CONTACT_PROMPT)}`, "_blank", "noopener,noreferrer");
   });
 
-  contactForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = validate();
-    if (!data) return;
-    formStatus.textContent = "Abriendo el cliente de correo con un cuerpo mínimo.";
-    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Consulta técnica")}&body=${encodeURIComponent(contactPrompt())}`;
+  document.getElementById("sendEmail")?.addEventListener("click", () => {
+    formStatus.textContent = "Abriendo el cliente de correo con un mensaje general.";
+    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Consulta técnica")}&body=${encodeURIComponent(CONTACT_PROMPT)}`;
   });
-
-  ["name", "company", "city", "service", "message"].forEach((fieldName) => {
-    contactForm.elements[fieldName].addEventListener("input", () => {
-      const error = fieldName === "company" ? "" : getErrors(values())[fieldName];
-      if (!error) clearFieldError(fieldName);
-      if (![...contactForm.querySelectorAll('[aria-invalid="true"]')].length) formStatus.textContent = "";
-    });
-  });
-
-  const requestedService = new URLSearchParams(window.location.search).get("servicio");
-  if (requestedService && ALLOWED_SERVICES.has(requestedService)) {
-    serviceSelect.value = requestedService;
-  }
 }

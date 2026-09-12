@@ -111,19 +111,23 @@ class ContentContractTests(unittest.TestCase):
             with self.subTest(page=page):
                 self.assertIn("https://wa.me/595971141032", html(page))
 
-    def test_blocked_brand_assets_are_replaced_by_owned_visuals(self):
+    def test_blocked_brand_assets_are_replaced_by_owned_images(self):
         homepage = parsed_html("index.html")
         hero = next(node for node in homepage.find_all("figure", "hero__media"))
-        self.assertTrue(hero.has_class("hero__media--system"))
-        self.assertFalse(hero.find_all("img"))
+        self.assertFalse(hero.has_class("hero__media--system"))
+        hero_image = hero.children("img")[0]
+        self.assertEqual(hero_image.attrs.get("src"), "assets/img/hero-infrastructure-original.png")
+        self.assertTrue((PUBLIC / hero_image.attrs["src"]).is_file())
 
         technologies = parsed_html("tecnologias.html")
         product_media = technologies.find_all("figure", "product-editorial__media")
         self.assertEqual(len(product_media), 4)
         for media in product_media:
             with self.subTest(label=media.attrs.get("aria-label")):
-                self.assertTrue(media.has_class("product-editorial__media--system"))
-                self.assertFalse(media.find_all("img"))
+                self.assertFalse(media.has_class("product-editorial__media--system"))
+                image = media.children("img")[0]
+                self.assertTrue(image.attrs.get("src", "").startswith("assets/img/technology-"))
+                self.assertTrue((PUBLIC / image.attrs["src"]).is_file())
 
         disclaimer = next(node for node in technologies.find_all("p", "asset-disclaimer")).text().lower()
         self.assertIn("recursos propios", disclaimer)
@@ -131,10 +135,10 @@ class ContentContractTests(unittest.TestCase):
         self.assertNotIn("referencias publicadas por fabricantes", disclaimer)
         self.assertNotIn("provienen de páginas oficiales", disclaimer)
 
-    def test_contact_prioritizes_whatsapp_and_has_accessible_errors(self):
+    def test_contact_prioritizes_whatsapp_and_does_not_collect_personal_details(self):
         source = html("contacto.html")
         page = parsed_html("contacto.html")
-        form = next(node for node in page.find_all("form") if node.attrs.get("id") == "contactForm")
+        form = next(node for node in page.find_all() if node.attrs.get("id") == "contactForm")
 
         self.assertIn('class="contact-primary ', source)
         self.assertLess(source.index('class="contact-primary '), source.index('id="contactForm"'))
@@ -143,29 +147,35 @@ class ContentContractTests(unittest.TestCase):
         self.assertEqual(len(phone_links), 1)
         phone = phone_links[0]
         self.assertEqual(phone.text(), "+595 971 141 032")
-        for field in ("name", "city", "service", "message"):
-            with self.subTest(field=field):
-                control = next(node for node in form.find_all() if node.attrs.get("id") == field)
-                label = next(node for node in form.find_all("label") if node.attrs.get("for") == field)
-                error = next(node for node in form.find_all() if node.attrs.get("data-error-for") == field)
-                self.assertTrue(label.text())
-                self.assertEqual(error.attrs.get("id"), f"{field}Error")
-                self.assertEqual(control.attrs.get("aria-describedby"), None)
+        self.assertEqual(form.find_all("input"), [])
+        self.assertEqual(form.find_all("textarea"), [])
+        self.assertEqual(form.find_all("select"), [])
+        self.assertNotIn('name="name"', source)
+        self.assertNotIn('name="company"', source)
+        self.assertNotIn('name="city"', source)
+        self.assertNotIn('name="message"', source)
+        self.assertIn("No solicitamos nombre, empresa, ciudad ni detalles de infraestructura", form.text())
         status = next(node for node in form.find_all() if node.attrs.get("id") == "formStatus")
         self.assertEqual(status.attrs.get("role"), "status")
         self.assertEqual(status.attrs.get("aria-live"), "polite")
 
-    def test_contact_form_uses_a_secure_same_origin_action_and_keeps_a_no_javascript_fallback(self):
+    def test_contact_form_uses_generic_external_actions_and_keeps_a_no_javascript_fallback(self):
         page = parsed_html("contacto.html")
-        form = next(node for node in page.find_all("form") if node.attrs.get("id") == "contactForm")
-        self.assertEqual(form.attrs.get("action"), "/contacto")
-        self.assertEqual(form.attrs.get("method"), "post")
-        self.assertEqual(form.attrs.get("enctype"), "text/plain")
-        self.assertNotIn("novalidate", form.attrs)
+        form = next(node for node in page.find_all() if node.attrs.get("id") == "contactForm")
+        self.assertNotIn("action", form.attrs)
+        self.assertNotIn("method", form.attrs)
+        self.assertNotIn("enctype", form.attrs)
         email_submit = next(node for node in form.find_all("button") if node.attrs.get("id") == "sendEmail")
-        self.assertEqual(email_submit.attrs.get("type"), "submit")
+        self.assertEqual(email_submit.attrs.get("type"), "button")
         fallback = next(node for node in form.find_all("p", "no-js-fallback"))
-        self.assertIn("mailto:alemateo07@gmail.com", [link.attrs.get("href") for link in fallback.find_all("a")])
+        fallback_email = next(link.attrs.get("href") for link in fallback.find_all("a") if link.attrs.get("href", "").startswith("mailto:"))
+        self.assertTrue(fallback_email.startswith("mailto:alemateo07@gmail.com?subject=Consulta"))
+
+    def test_privacy_policy_matches_the_minimized_contact_flow(self):
+        privacy = html("privacidad.html")
+        self.assertIn("no solicita nombre, empresa, ciudad ni detalles de infraestructura", privacy.lower())
+        self.assertIn("no se almacenan datos personales en este sitio", privacy.lower())
+        self.assertNotIn("se pueden ingresar nombre, empresa u organización, ciudad, servicio de interés y mensaje", privacy.lower())
 
     def test_email_destination_is_not_exposed_as_visible_page_copy(self):
         for page_name in ("index.html", "servicios.html", "casos.html", "tecnologias.html", "contacto.html", "privacidad.html"):
@@ -192,40 +202,19 @@ class ContentContractTests(unittest.TestCase):
                     with self.subTest(page=page_name, href=href):
                         self.assertIn("?text=", href)
 
-    def test_contact_script_initializes_service_safely_and_links_errors(self):
+    def test_contact_script_opens_generic_channels_without_reading_form_data(self):
         script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
-        initialization = re.search(
-            r'const requestedService = new URLSearchParams\(window\.location\.search\)\.get\("servicio"\);\s*'
-            r'if \(requestedService && ALLOWED_SERVICES\.has\(requestedService\)\) \{\s*'
-            r'serviceSelect\.value = requestedService;\s*\}',
-            script,
-        )
-        self.assertIsNotNone(initialization)
-        self.assertNotIn("serviceAliases", script)
-        self.assertEqual(script.count("serviceSelect.value ="), 1)
+        self.assertIn('const CONTACT_PROMPT = "Hola Jesareko, quisiera solicitar información técnica.";', script)
+        self.assertIn('window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(CONTACT_PROMPT)}`', script)
+        self.assertIn('window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Consulta técnica")}&body=${encodeURIComponent(CONTACT_PROMPT)}`', script)
+        for forbidden in ("FormData", "contactForm.elements", "URLSearchParams", "ALLOWED_SERVICES"):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, script)
 
-        cleanup = re.search(r"function clearFieldError\(fieldName\) \{(?P<body>.*?)\n  \}\n\n  function values", script, re.S)
-        self.assertIsNotNone(cleanup)
-        cleanup_body = cleanup.group("body")
-        self.assertIn('removeAttribute("aria-invalid")', cleanup_body)
-        self.assertIn('removeAttribute("aria-describedby")', cleanup_body)
-        self.assertIn('setAttribute("aria-describedby", error.id)', script)
-
-    def test_contact_service_queries_are_limited_to_allowed_select_values(self):
-        allowed = {
-            "Revisión técnica / diagnóstico",
-            "Redes y WiFi",
-            "CCTV, alarmas, accesos e incendio",
-            "Soporte e infraestructura",
-            "Web, monitoreo y automatización",
-            "Otro",
-        }
-        values = []
+    def test_contact_links_do_not_encode_service_queries(self):
         for page in PUBLIC.glob("*.html"):
-            values.extend(unquote(value) for value in re.findall(r'href="[^"]*\?servicio=([^"&]+)', page.read_text(encoding="utf-8")))
-
-        self.assertTrue(values)
-        self.assertTrue(set(values).issubset(allowed), set(values) - allowed)
+            with self.subTest(page=page.name):
+                self.assertNotIn("?servicio=", page.read_text(encoding="utf-8"))
 
     def test_contact_phone_has_a_full_touch_target(self):
         styles = STYLES.read_text(encoding="utf-8")
@@ -268,8 +257,8 @@ class ContentContractTests(unittest.TestCase):
         for selector in selectors:
             with self.subTest(selector=selector):
                 self.assertRegex(styles, rf"(?m)^{re.escape(selector)}(?:,|\s*\{{)")
-        self.assertRegex(styles, r"(?s)\.hero__media img\s*\{[^}]*height:\s*auto;")
-        self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*1600\s*/\s*659;")
+        self.assertRegex(styles, r"(?s)\.hero__media img\s*\{[^}]*height:\s*100%;")
+        self.assertRegex(styles, r"(?s)\.hero__media\s*\{[^}]*aspect-ratio:\s*16\s*/\s*10;")
 
     def test_services_follows_customer_decision_contract(self):
         source = html("servicios.html")
@@ -312,7 +301,7 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue(any(note.text().lower().startswith("criterio t") for note in notes))
                 contextual_links = [link for link in scope.children("a") if link.text() == "Consultar este servicio"]
                 self.assertEqual(len(contextual_links), 1)
-                self.assertEqual(contextual_links[0].attrs.get("href"), f"/contacto?servicio={contact_services[service]}")
+                self.assertEqual(contextual_links[0].attrs.get("href"), "/contacto")
 
         secondary_notes = page.find_all("p", "service-detail__note--secondary")
         self.assertEqual(len(secondary_notes), 1)
@@ -434,7 +423,8 @@ class ContentContractTests(unittest.TestCase):
             media = product.children("figure", "product-editorial__media")[0]
             classes = media.attrs.get("class", "").split()
             self.assertIn("product-editorial__media", classes)
-            self.assertIn("product-editorial__media--system", classes)
+            self.assertNotIn("product-editorial__media--system", classes)
+            self.assertEqual(len(media.children("img")), 1)
 
     def test_technologies_covers_networks_and_support_without_unshown_promises(self):
         source = html("tecnologias.html")
@@ -493,11 +483,9 @@ class ContentContractTests(unittest.TestCase):
         self.assertRegex(media.group("body"), r"height:\s*clamp\(13rem,\s*58vw,\s*20rem\);")
         self.assertRegex(media.group("body"), r"overflow:\s*hidden;")
         self.assertNotRegex(media.group("body"), r"aspect-ratio:")
-        self.assertRegex(image.group("body"), r"width:\s*auto;")
-        self.assertRegex(image.group("body"), r"max-width:\s*100%;")
-        self.assertRegex(image.group("body"), r"height:\s*auto;")
-        self.assertRegex(image.group("body"), r"max-height:\s*100%;")
-        self.assertRegex(image.group("body"), r"object-fit:\s*contain;")
+        self.assertRegex(image.group("body"), r"width:\s*100%;")
+        self.assertRegex(image.group("body"), r"height:\s*100%;")
+        self.assertRegex(image.group("body"), r"object-fit:\s*cover;")
 
     def test_mobile_product_copy_precedes_its_matching_media(self):
         styles = STYLES.read_text(encoding="utf-8")

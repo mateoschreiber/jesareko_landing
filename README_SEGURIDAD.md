@@ -4,7 +4,7 @@
 - Se preparó una Content Security Policy restrictiva para producción, limitada a recursos locales, y `Cache-Control: no-transform` para impedir la inyección automática del beacon de Cloudflare.
 - Se agregaron headers recomendados: CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy: same-origin` y `Cross-Origin-Resource-Policy`.
 - Se eliminaron estilos inline para evitar `unsafe-inline` en estilos y se retiró `navigate-to`, directiva no soportada por navegadores actuales.
-- El formulario sigue siendo estatico, pero ahora normaliza texto, elimina caracteres de control, limita longitudes y construye WhatsApp/mailto con `encodeURIComponent`.
+- El panel de contacto no solicita ni almacena nombre, empresa, ciudad, servicio o mensaje; WhatsApp y `mailto:` se construyen con un mensaje general mediante `encodeURIComponent`.
 - CSS y JavaScript tienen una sola fuente de verdad; la compresion se delega al CDN.
 - Las configuraciones alternativas de Nginx y Apache fuerzan HTTPS, limitan TLS a 1.2/1.3 y devuelven `404` para rutas inexistentes.
 - Se agregaron archivos de despliegue para Cloudflare Pages/Netlify, Nginx y Apache.
@@ -78,7 +78,7 @@ No agregar `includeSubDomains` ni `preload` hasta completar esta checklist:
 - Cambiar `https://github.com/tuusuario`.
 - Agregar `assets/img/og-image.jpg` o ajustar `og:image`.
 - Verificar que no haya `.env`, logs, backups o archivos internos publicados.
-- Probar formulario por WhatsApp y correo.
+- Probar los botones de contacto por WhatsApp y correo.
 - Probar headers con una herramienta de analisis de seguridad.
 - Revisar consola del navegador por errores CSP.
 

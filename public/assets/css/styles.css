@@ -91,7 +91,6 @@
 html {
   background: var(--color-canvas);
   scroll-behavior: smooth;
-  scroll-padding-top: var(--header-height);
 }
 
 body {
@@ -122,10 +121,6 @@ img, svg { display: block; max-width: 100%; }
   margin-inline: auto;
 }
 .editorial-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); }
-
-:target {
-  scroll-margin-block-start: var(--header-height);
-}
 
 a {
   color: inherit;
@@ -237,16 +232,11 @@ h3 {
 }
 
 .site-header {
-  position: sticky;
-  inset-block-start: 0;
+  position: relative;
   z-index: var(--layer-header);
-  border-block-end: 1px solid transparent;
-  background: color-mix(in srgb, var(--color-paper) 96%, transparent);
-  backdrop-filter: blur(16px);
-}
-
-.site-header.is-scrolled {
   border-color: var(--color-line);
+  border-block-end: 1px solid var(--color-line);
+  background: var(--color-paper);
 }
 
 .site-nav {
@@ -409,21 +399,16 @@ h3 {
 
 .hero__media {
   min-width: 0;
-  aspect-ratio: 1600 / 659;
+  aspect-ratio: 16 / 10;
   margin: 0;
   border-radius: var(--radius-lg);
   background: var(--color-canvas);
 }
 
-.hero__media--system {
-  display: grid;
-  place-items: center;
-  padding: clamp(1.2rem, 4vw, 2rem);
-}
-
 .hero__media img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   border-radius: inherit;
 }
 
@@ -667,100 +652,16 @@ h3 {
   height: clamp(13rem, 58vw, 20rem);
   min-width: 0;
   margin: 0;
-  padding: clamp(1rem, 4vw, 2.5rem);
+  padding: 0;
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--color-canvas);
 }
 
 .product-editorial__media img {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.system-visual {
-  position: relative;
-  width: min(100%, 28rem);
-  aspect-ratio: 16 / 9;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  background:
-    linear-gradient(90deg, rgba(26, 75, 54, .09) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(26, 75, 54, .09) 1px, transparent 1px),
-    var(--color-paper);
-  background-size: 2.2rem 2.2rem;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .72);
-}
-
-.system-visual span {
-  position: absolute;
-  display: block;
-  border: 2px solid var(--color-brand);
-  background: var(--color-canvas);
-}
-
-.system-visual--hero {
-  width: min(100%, 42rem);
-}
-
-.system-visual--hero span:nth-child(1) {
-  inset: 16% auto auto 12%;
-  width: 22%;
-  height: 22%;
-  border-radius: 999px;
-}
-
-.system-visual--hero span:nth-child(2) {
-  inset: auto 13% 18% auto;
-  width: 24%;
-  height: 24%;
-  border-radius: 999px;
-}
-
-.system-visual--hero span:nth-child(3) {
-  inset: 37% 34% auto 34%;
-  height: 26%;
-  border-radius: var(--radius-sm);
-}
-
-.system-visual--hero span:nth-child(4) {
-  inset: 48% 20% auto 20%;
-  height: 2px;
-  border-width: 0;
-  background: var(--color-brand);
-}
-
-.system-visual--camera span:nth-child(1),
-.system-visual--alarm span:nth-child(1),
-.system-visual--access span:nth-child(1),
-.system-visual--integrated span:nth-child(1) {
-  inset: 23% auto auto 18%;
-  width: 32%;
-  height: 26%;
-  border-radius: var(--radius-sm);
-}
-
-.system-visual--camera span:nth-child(2),
-.system-visual--alarm span:nth-child(2),
-.system-visual--access span:nth-child(2),
-.system-visual--integrated span:nth-child(2) {
-  inset: 37% 17% auto auto;
-  width: 26%;
-  height: 26%;
-  border-radius: 999px;
-}
-
-.system-visual--camera span:nth-child(3),
-.system-visual--alarm span:nth-child(3),
-.system-visual--access span:nth-child(3),
-.system-visual--integrated span:nth-child(3) {
-  inset: auto 22% 20% 22%;
-  height: 2px;
-  border-width: 0;
-  background: var(--color-brand);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-editorial__copy {
@@ -1071,7 +972,6 @@ h3 {
   }
 
   .product-editorial__media img,
-  .system-visual,
   .hero__media img {
     transition: transform var(--transition-standard) ease;
   }
@@ -1084,7 +984,6 @@ h3 {
   }
 
   .product-editorial:hover .product-editorial__media img,
-  .product-editorial:hover .system-visual,
   .hero__media:hover img {
     transform: scale(1.018);
   }
