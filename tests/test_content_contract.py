@@ -175,6 +175,19 @@ class ContentContractTests(unittest.TestCase):
                 self.assertEqual(image.attrs.get("alt"), "")
                 self.assertEqual(image.attrs.get("loading"), "lazy")
 
+    def test_home_technology_uses_a_local_marketing_image_instead_of_a_topology_diagram(self):
+        homepage = parsed_html("index.html")
+        technology = homepage.find_all("section", "home-technology")[0]
+        media = technology.find_all("figure", "home-technology__media")
+        self.assertEqual(len(media), 1)
+        image = media[0].find_all("img")[0]
+        self.assertEqual(image.attrs.get("src"), "assets/img/home-technology-infrastructure.webp")
+        self.assertEqual(image.attrs.get("alt"), "")
+        self.assertEqual(image.attrs.get("loading"), "lazy")
+        self.assertEqual(image.attrs.get("width"), "1587")
+        self.assertEqual(image.attrs.get("height"), "992")
+        self.assertFalse(technology.find_all("svg"))
+
     def test_second_iteration_adds_scoped_process_cases_and_service_editorials(self):
         homepage = parsed_html("index.html")
         home_main = next(node for node in homepage.find_all("main") if node.attrs.get("id") == "mainContent")

@@ -203,6 +203,17 @@
       "dimensions": "1587 x 992",
       "byte_size": 154758,
       "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-technology-infrastructure.webp",
+      "usage_context": "homepage_technology_applied_marketing_image",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-technology-infrastructure-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 91706,
+      "generated_on": "2026-09-13"
     }
   ]
 }

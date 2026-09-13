@@ -194,7 +194,7 @@ class SiteContractTests(unittest.TestCase):
             ".home-page .home-services",
             ".home-page .home-service-card",
             ".home-page .home-technology",
-            ".home-page .home-topology",
+            ".home-page .home-technology__media",
         ):
             with self.subTest(selector=selector):
                 self.assertIn(selector, css)
@@ -203,18 +203,7 @@ class SiteContractTests(unittest.TestCase):
             with self.subTest(unscoped_selector=unscoped_selector):
                 self.assertNotRegex(css, rf"(?m)^\s*\.{unscoped_selector}(?:[\s,:{{])")
 
-        self.assertIn("@keyframes home-topology-network", css)
-        self.assertRegex(css, r"animation:\s*home-topology-network\s+[^;]*\s1\s+(?:both|forwards)")
-        self.assertRegex(
-            css,
-            r"(?s)@media \(prefers-reduced-motion: reduce\)\s*\{.*?\.home-page .*?animation:\s*none\s*!important;",
-        )
-
-    def test_home_ambient_motion_is_one_time_and_optional(self):
-        script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
-        self.assertIn('document.querySelector(".home-page .home-technology")', script)
-        self.assertIn('homeTechnology.classList.add("is-ambient-ready")', script)
-        self.assertIn("ambientObserver.unobserve(homeTechnology)", script)
+        self.assertNotIn("home-topology", css)
 
     def test_home_mobile_navigation_reserves_its_javascript_state_before_paint(self):
         source = (PUBLIC / "index.html").read_text(encoding="utf-8")
@@ -232,8 +221,7 @@ class SiteContractTests(unittest.TestCase):
             with self.subTest(selector=selector):
                 self.assertIn(selector, css)
 
-        self.assertIn("home-topology-network", css)
-        self.assertRegex(css, r"animation:\s*home-topology-network\s+[^;]*\s1\s+(?:both|forwards)")
+        self.assertIn("home-technology__media", css)
 
     def test_responsive_queries_are_consolidated(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
