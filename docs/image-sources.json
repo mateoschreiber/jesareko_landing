@@ -93,6 +93,116 @@
       "usage_basis": "Original project asset generated at the site owner's request",
       "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
       "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-process-diagnosis.webp",
+      "usage_context": "homepage_process_diagnosis",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992, center-cropped to 1448 x 1086 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-process-diagnosis-768.webp",
+      "dimensions": "1448 x 1086",
+      "byte_size": 107074,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-process-proposal.webp",
+      "usage_context": "homepage_process_proposal",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992, center-cropped to 1448 x 1086 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-process-proposal-768.webp",
+      "dimensions": "1448 x 1086",
+      "byte_size": 98268,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-process-installation.webp",
+      "usage_context": "homepage_process_installation",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992, center-cropped to 1448 x 1086 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-process-installation-768.webp",
+      "dimensions": "1448 x 1086",
+      "byte_size": 100486,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-process-handover.webp",
+      "usage_context": "homepage_process_handover",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992, center-cropped to 1448 x 1086 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-process-handover-768.webp",
+      "dimensions": "1448 x 1086",
+      "byte_size": 114716,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-case-commerce.webp",
+      "usage_context": "homepage_case_commerce",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-case-commerce-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 206928,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-case-residential.webp",
+      "usage_context": "homepage_case_residential",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-case-residential-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 104038,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-case-office.webp",
+      "usage_context": "homepage_case_office",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/home-case-office-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 143904,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/services-networks-detail.webp",
+      "usage_context": "services_networks_editorial_detail",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/services-networks-detail-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 85716,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/services-security-detail.webp",
+      "usage_context": "services_security_editorial_detail",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/services-security-detail-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 184440,
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/services-support-detail.webp",
+      "usage_context": "services_support_editorial_detail",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/services-support-detail-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 154758,
+      "generated_on": "2026-09-13"
     }
   ]
 }

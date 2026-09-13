@@ -199,8 +199,12 @@ class SiteContractTests(unittest.TestCase):
             with self.subTest(selector=selector):
                 self.assertIn(selector, css)
 
-        self.assertIn("@keyframes home-topology-settle", css)
-        self.assertRegex(css, r"animation:\s*home-topology-settle\s+[^;]*\s1\s+(?:both|forwards)")
+        for unscoped_selector in ("home-process", "home-case-card", "services-index", "services-editorial"):
+            with self.subTest(unscoped_selector=unscoped_selector):
+                self.assertNotRegex(css, rf"(?m)^\s*\.{unscoped_selector}(?:[\s,:{{])")
+
+        self.assertIn("@keyframes home-topology-network", css)
+        self.assertRegex(css, r"animation:\s*home-topology-network\s+[^;]*\s1\s+(?:both|forwards)")
         self.assertRegex(
             css,
             r"(?s)@media \(prefers-reduced-motion: reduce\)\s*\{.*?\.home-page .*?animation:\s*none\s*!important;",
@@ -216,6 +220,20 @@ class SiteContractTests(unittest.TestCase):
         source = (PUBLIC / "index.html").read_text(encoding="utf-8")
         self.assertIn('<html lang="es" class="js">', source)
         self.assertIn('<noscript><style>.js .nav-toggle { display: none; } .js .nav-menu { display: flex; }</style></noscript>', source)
+
+    def test_second_iteration_styles_are_limited_to_home_and_services_roots(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+        for selector in (
+            ".home-page .home-process",
+            ".home-page .home-case-card",
+            ".services-page .services-index",
+            ".services-page .services-editorial",
+        ):
+            with self.subTest(selector=selector):
+                self.assertIn(selector, css)
+
+        self.assertIn("home-topology-network", css)
+        self.assertRegex(css, r"animation:\s*home-topology-network\s+[^;]*\s1\s+(?:both|forwards)")
 
     def test_responsive_queries_are_consolidated(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")

@@ -175,6 +175,47 @@ class ContentContractTests(unittest.TestCase):
                 self.assertEqual(image.attrs.get("alt"), "")
                 self.assertEqual(image.attrs.get("loading"), "lazy")
 
+    def test_second_iteration_adds_scoped_process_cases_and_service_editorials(self):
+        homepage = parsed_html("index.html")
+        home_main = next(node for node in homepage.find_all("main") if node.attrs.get("id") == "mainContent")
+        self.assertTrue(home_main.find_all(class_name="home-process"))
+        self.assertTrue(home_main.find_all(class_name="home-cases"))
+        self.assertEqual(len(home_main.find_all("li", "home-process__step")), 4)
+        self.assertEqual(len(home_main.find_all("a", "home-case-card")), 3)
+
+        services = parsed_html("servicios.html")
+        services_main = next(node for node in services.find_all("main") if node.attrs.get("id") == "inicio")
+        self.assertTrue(services_main.has_class("services-page"))
+        self.assertTrue(services_main.find_all("nav", "services-index"))
+        details = services_main.find_all("section", "services-editorial")
+        self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "seguridad", "soporte"])
+        self.assertEqual(len(services_main.find_all("figure", "services-editorial__media")), 3)
+
+        expected_assets = (
+            "home-process-diagnosis.webp",
+            "home-process-proposal.webp",
+            "home-process-installation.webp",
+            "home-process-handover.webp",
+            "home-case-commerce.webp",
+            "home-case-residential.webp",
+            "home-case-office.webp",
+            "services-networks-detail.webp",
+            "services-security-detail.webp",
+            "services-support-detail.webp",
+        )
+        image_sources = {image.attrs.get("src") for image in homepage.find_all("img") + services.find_all("img")}
+        for asset in expected_assets:
+            with self.subTest(asset=asset):
+                self.assertIn(f"assets/img/{asset}", image_sources)
+
+        for image in homepage.find_all("img"):
+            if image.attrs.get("src", "").startswith("assets/img/home-process-") or image.attrs.get("src", "").startswith("assets/img/home-case-"):
+                self.assertEqual(image.attrs.get("alt"), "")
+
+        for image in services_main.find_all("img"):
+            if image.attrs.get("src", "").startswith("assets/img/services-"):
+                self.assertTrue(image.attrs.get("alt"))
+
     def test_contact_prioritizes_whatsapp_and_does_not_collect_personal_details(self):
         source = html("contacto.html")
         page = parsed_html("contacto.html")
