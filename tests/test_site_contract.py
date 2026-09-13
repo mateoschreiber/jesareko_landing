@@ -186,6 +186,37 @@ class SiteContractTests(unittest.TestCase):
         for token in ("--radius-sm: 10px", "--radius-md: 14px", "--radius-lg: 20px"):
             self.assertIn(token, css)
 
+    def test_home_visual_rules_are_scoped_and_respect_motion_preferences(self):
+        css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
+
+        for selector in (
+            ".home-page .home-hero",
+            ".home-page .home-services",
+            ".home-page .home-service-card",
+            ".home-page .home-technology",
+            ".home-page .home-topology",
+        ):
+            with self.subTest(selector=selector):
+                self.assertIn(selector, css)
+
+        self.assertIn("@keyframes home-topology-settle", css)
+        self.assertRegex(css, r"animation:\s*home-topology-settle\s+[^;]*\s1\s+(?:both|forwards)")
+        self.assertRegex(
+            css,
+            r"(?s)@media \(prefers-reduced-motion: reduce\)\s*\{.*?\.home-page .*?animation:\s*none\s*!important;",
+        )
+
+    def test_home_ambient_motion_is_one_time_and_optional(self):
+        script = (PUBLIC / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        self.assertIn('document.querySelector(".home-page .home-technology")', script)
+        self.assertIn('homeTechnology.classList.add("is-ambient-ready")', script)
+        self.assertIn("ambientObserver.unobserve(homeTechnology)", script)
+
+    def test_home_mobile_navigation_reserves_its_javascript_state_before_paint(self):
+        source = (PUBLIC / "index.html").read_text(encoding="utf-8")
+        self.assertIn('<html lang="es" class="js">', source)
+        self.assertIn('<noscript><style>.js .nav-toggle { display: none; } .js .nav-menu { display: flex; }</style></noscript>', source)
+
     def test_responsive_queries_are_consolidated(self):
         css = (PUBLIC / "assets" / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(css.count("@media (max-width: 52rem)"), 1)

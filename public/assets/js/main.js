@@ -36,6 +36,16 @@ if (!reducedMotion?.matches && "IntersectionObserver" in window) {
     target.classList.add("reveal-item");
     revealObserver.observe(target);
   });
+
+  const homeTechnology = document.querySelector(".home-page .home-technology");
+  if (homeTechnology) {
+    const ambientObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      homeTechnology.classList.add("is-ambient-ready");
+      ambientObserver.unobserve(homeTechnology);
+    }, { threshold: .35 });
+    ambientObserver.observe(homeTechnology);
+  }
 }
 
 function updateScrollState() {

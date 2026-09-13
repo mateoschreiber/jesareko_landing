@@ -116,7 +116,7 @@ class ContentContractTests(unittest.TestCase):
         hero = next(node for node in homepage.find_all("figure", "hero__media"))
         self.assertFalse(hero.has_class("hero__media--system"))
         hero_image = hero.children("img")[0]
-        self.assertEqual(hero_image.attrs.get("src"), "assets/img/hero-infrastructure-original.png")
+        self.assertEqual(hero_image.attrs.get("src"), "assets/img/home-hero-infrastructure.webp")
         self.assertTrue((PUBLIC / hero_image.attrs["src"]).is_file())
 
         technologies = parsed_html("tecnologias.html")
@@ -135,6 +135,45 @@ class ContentContractTests(unittest.TestCase):
         self.assertNotIn("marcas mencionadas", disclaimer)
         self.assertNotIn("referencias publicadas por fabricantes", disclaimer)
         self.assertNotIn("provienen de páginas oficiales", disclaimer)
+
+    def test_home_visual_components_are_scoped_and_use_local_assets(self):
+        homepage = parsed_html("index.html")
+        main = next(node for node in homepage.find_all("main") if node.attrs.get("id") == "mainContent")
+        self.assertTrue(main.has_class("home-page"))
+
+        for class_name in ("home-hero", "home-services", "home-technology"):
+            with self.subTest(class_name=class_name):
+                self.assertTrue(main.find_all(class_name=class_name))
+
+        service_cards = main.find_all("a", "home-service-card")
+        self.assertEqual(len(service_cards), 3)
+        self.assertEqual(
+            {card.attrs.get("href") for card in service_cards},
+            {"/servicios#redes", "/servicios#seguridad", "/servicios#soporte"},
+        )
+
+        images = main.find_all("img")
+        sources = {image.attrs.get("src") for image in images}
+        for filename in (
+            "home-hero-infrastructure.webp",
+            "home-service-networks.webp",
+            "home-service-security.webp",
+            "home-service-support.webp",
+        ):
+            with self.subTest(filename=filename):
+                self.assertIn(f"assets/img/{filename}", sources)
+
+        hero = next(image for image in images if image.attrs.get("src", "").endswith("home-hero-infrastructure.webp"))
+        self.assertEqual(hero.attrs.get("fetchpriority"), "high")
+        self.assertNotIn("loading", hero.attrs)
+        self.assertNotEqual(hero.attrs.get("alt"), "")
+
+        service_images = [image for image in images if "home-service-" in image.attrs.get("src", "")]
+        self.assertEqual(len(service_images), 3)
+        for image in service_images:
+            with self.subTest(src=image.attrs.get("src")):
+                self.assertEqual(image.attrs.get("alt"), "")
+                self.assertEqual(image.attrs.get("loading"), "lazy")
 
     def test_contact_prioritizes_whatsapp_and_does_not_collect_personal_details(self):
         source = html("contacto.html")
@@ -226,7 +265,7 @@ class ContentContractTests(unittest.TestCase):
         source = html("index.html")
         positions = [source.index(f'id="{section}"') for section in ("hero", "areas", "evidence", "process", "cases", "diagnostic")]
         self.assertEqual(positions, sorted(positions))
-        self.assertEqual(source.count('class="service-row__item"'), 3)
+        self.assertEqual(source.count("service-row__item"), 3)
         self.assertIn("Infraestructura clara. Sistemas que funcionan.", source)
         hero = source[positions[0]:positions[1]]
         cases = source[positions[4]:positions[5]]

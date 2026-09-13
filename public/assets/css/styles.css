@@ -1288,6 +1288,302 @@ h3 {
   }
 }
 
+/* Home-only visual system */
+.home-page {
+  --home-surface-dark: #0b3523;
+  --home-surface-deep: #071f15;
+  --home-line: rgba(227, 240, 232, .22);
+  --home-muted: #c9d9cf;
+  --home-node: #a8d8b7;
+}
+
+.home-page .home-hero {
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  padding-block: clamp(2rem, 7vw, 5rem);
+}
+
+.home-page .home-hero h1 {
+  font-size: clamp(2rem, 9vw, var(--font-size-h1));
+  overflow-wrap: anywhere;
+}
+
+.home-page .home-hero__media {
+  overflow: hidden;
+  box-shadow: 0 20px 48px rgba(14, 31, 22, .13);
+}
+
+.home-page .home-services {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  margin-block: 0;
+  border: 0;
+}
+
+.home-page .home-service-card {
+  display: grid;
+  grid-template-areas:
+    "index"
+    "media"
+    "copy"
+    "arrow";
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  min-height: 48px;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+  overflow: hidden;
+}
+
+.home-page .home-service-card__index {
+  grid-area: index;
+  padding: var(--space-2) var(--space-2) .65rem;
+  color: var(--color-brand);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.home-page .home-service-card__media {
+  grid-area: media;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  background: var(--color-canvas);
+  overflow: hidden;
+}
+
+.home-page .home-service-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-page .home-service-card__copy {
+  display: grid;
+  grid-area: copy;
+  gap: .55rem;
+  padding: var(--space-2);
+  color: var(--color-ink-soft);
+  font-size: .95rem;
+}
+
+.home-page .home-service-card__copy h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-tight);
+}
+
+.home-page .home-service-card__copy p { margin: 0; }
+
+.home-page .home-service-card__tags {
+  color: var(--color-brand-dark);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.home-page .home-service-card__arrow {
+  grid-area: arrow;
+  width: 48px;
+  height: 48px;
+  margin: 0 var(--space-2) var(--space-2) auto;
+  padding: .8rem;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  color: var(--color-brand-dark);
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
+}
+
+.home-page .home-technology {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-block: clamp(3.5rem, 9vw, 6rem);
+  padding: clamp(1.5rem, 6vw, 4rem);
+  border: 1px solid rgba(227, 240, 232, .18);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 85% 18%, rgba(168, 216, 183, .14), transparent 24rem),
+    linear-gradient(135deg, var(--home-surface-dark), var(--home-surface-deep));
+  color: var(--color-paper);
+  overflow: hidden;
+}
+
+.home-page .home-technology::before {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(227, 240, 232, .08);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.home-page .home-technology .eyebrow,
+.home-page .home-technology h2,
+.home-page .home-technology strong {
+  color: var(--color-paper);
+}
+
+.home-page .home-technology p,
+.home-page .home-technology .application-list span {
+  color: var(--home-muted);
+}
+
+.home-page .home-technology__intro > p:last-child {
+  max-width: 38rem;
+  margin: 0;
+  font-size: var(--font-size-body-large);
+}
+
+.home-page .home-technology__system {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.home-page .home-topology {
+  position: relative;
+  min-height: 13rem;
+  border: 1px solid var(--home-line);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, .035);
+}
+
+.home-page .home-topology__line {
+  position: absolute;
+  height: 1px;
+  background: var(--home-line);
+  transform-origin: left center;
+}
+
+.home-page .home-topology__line--a { inset: 27% auto auto 20%; width: 46%; transform: rotate(21deg); }
+.home-page .home-topology__line--b { inset: 50% auto auto 20%; width: 46%; transform: rotate(-18deg); }
+.home-page .home-topology__line--c { inset: 50% auto auto 20%; width: 36%; transform: rotate(0); }
+
+.home-page .home-topology__node {
+  position: absolute;
+  width: .8rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--home-node);
+  border-radius: 50%;
+  background: var(--home-surface-dark);
+  box-shadow: 0 0 0 5px rgba(168, 216, 183, .08);
+}
+
+.home-page .home-topology__node--origin { inset: calc(50% - .4rem) auto auto 17%; background: var(--home-node); }
+.home-page .home-topology__node--network { inset: 23% 30% auto auto; }
+.home-page .home-topology__node--security { inset: 60% 30% auto auto; }
+.home-page .home-topology__node--support { inset: calc(50% - .4rem) 16% auto auto; }
+
+.home-page .home-technology .application-list {
+  grid-template-columns: minmax(0, 1fr);
+  border-block-start-color: var(--home-line);
+}
+
+.home-page .home-technology .application-list span {
+  display: grid;
+  grid-template-columns: minmax(7rem, .6fr) minmax(0, 1fr);
+  gap: var(--space-2);
+  min-height: 48px;
+  padding-inline: 0;
+  border-block-end-color: var(--home-line);
+  font-size: .9rem;
+}
+
+.home-page .home-technology .application-list strong {
+  min-width: 0;
+  font-family: var(--font-ui);
+  font-size: .76rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+@keyframes home-topology-settle {
+  0% { opacity: .32; transform: scale(.82); }
+  65% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.home-page .home-technology.is-ambient-ready .home-topology__node--origin {
+  animation: home-topology-settle 2.6s ease-out 1 both;
+}
+
+@media (min-width: 42rem) {
+  .home-page .home-service-card {
+    grid-template-areas:
+      "index media"
+      "copy media"
+      "arrow media";
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, .95fr);
+  }
+
+  .home-page .home-service-card__media { min-height: 16rem; }
+}
+
+@media (min-width: 48rem) {
+  .home-page .home-services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .home-page .home-service-card {
+    grid-template-areas:
+      "index"
+      "media"
+      "copy"
+      "arrow";
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-page .home-service-card__media { min-height: 0; }
+
+  .home-page .home-technology {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, .9fr);
+    align-items: center;
+  }
+}
+
+@media (min-width: 64.01rem) {
+  .home-page .home-service-card__copy { min-height: 12rem; }
+  .home-page .home-technology { margin-block: var(--section-space); }
+
+  .home-page + .site-footer .footer-grid > div:not(.footer-brand) {
+    grid-template-columns: repeat(2, max-content);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .home-page .home-service-card,
+  .home-page .home-service-card__media img,
+  .home-page .home-service-card__arrow {
+    transition: border-color var(--transition-fast) ease, box-shadow var(--transition-fast) ease, transform var(--transition-standard) ease, background-color var(--transition-fast) ease;
+  }
+
+  .home-page .home-service-card:hover,
+  .home-page .home-service-card:focus-visible {
+    border-color: var(--color-brand);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-3px);
+  }
+
+  .home-page .home-service-card:hover .home-service-card__media img,
+  .home-page .home-service-card:focus-visible .home-service-card__media img { transform: scale(1.04); }
+
+  .home-page .home-service-card:hover .home-service-card__arrow,
+  .home-page .home-service-card:focus-visible .home-service-card__arrow {
+    border-color: var(--color-brand);
+    background: var(--color-brand);
+    color: var(--color-paper);
+    transform: translateX(3px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1298,5 +1594,9 @@ h3 {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
+  }
+
+  .home-page .home-technology.is-ambient-ready .home-topology__node--origin {
+    animation: none !important;
   }
 }

@@ -60,5 +60,39 @@
       "processing": "Transparent source cropped to its visible bounds, downscaled from 4000 x 4000 to 1800 x 1345, and encoded as WebP at quality 86",
       "retrieved_on": "2026-07-26"
     }
+  ],
+  "owned_generated_images": [
+    {
+      "local_file": "public/assets/img/home-hero-infrastructure.webp",
+      "usage_context": "homepage_hero",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-service-networks.webp",
+      "usage_context": "homepage_service_networks",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-service-security.webp",
+      "usage_context": "homepage_service_security",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
+      "generated_on": "2026-09-13"
+    },
+    {
+      "local_file": "public/assets/img/home-service-support.webp",
+      "usage_context": "homepage_service_support",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
+      "generated_on": "2026-09-13"
+    }
   ]
 }
