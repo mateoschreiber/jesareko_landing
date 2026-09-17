@@ -205,6 +205,27 @@
       "generated_on": "2026-09-13"
     },
     {
+      "local_file": "public/assets/img/home-service-data-cabling.webp",
+      "usage_context": "homepage_service_data_cabling",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1586 x 992, then encoded locally as WebP at quality 84",
+      "dimensions": "1586 x 992",
+      "byte_size": 113900,
+      "generated_on": "2026-09-17"
+    },
+    {
+      "local_file": "public/assets/img/services-data-cabling-detail.webp",
+      "usage_context": "services_data_cabling_editorial_detail",
+      "source_type": "generated_original",
+      "usage_basis": "Original project asset generated at the site owner's request",
+      "processing": "Generated at 1587 x 992 and encoded locally as WebP at quality 84",
+      "responsive_variant": "public/assets/img/services-data-cabling-detail-768.webp",
+      "dimensions": "1587 x 992",
+      "byte_size": 112524,
+      "generated_on": "2026-09-17"
+    },
+    {
       "local_file": "public/assets/img/home-technology-infrastructure.webp",
       "usage_context": "homepage_technology_applied_marketing_image",
       "source_type": "generated_original",

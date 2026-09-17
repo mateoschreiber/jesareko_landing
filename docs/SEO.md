@@ -5,7 +5,7 @@
 - URLs canónicas limpias sin extensión: `/servicios`, `/casos`, `/tecnologias`, `/contacto` y `/privacidad`.
 - Redirecciones permanentes desde las URLs `.html` y manejo uniforme sin barra final.
 - Sitemap, enlaces internos, Open Graph y JSON-LD alineados con las URLs públicas finales.
-- Títulos y descripciones orientados a WiFi, CCTV, alarmas, soporte técnico, Encarnación e Itapúa.
+- Títulos y descripciones orientados a planos de cableado de datos, WiFi, CCTV, alarmas, soporte técnico, Encarnación e Itapúa.
 - Imagen social raster de 1200 × 630 px y tarjetas sociales grandes.
 - Entidad `Organization` y `WebSite` con áreas de servicio y atención personalizada.
 - Sin dirección física, coordenadas, horarios, perfil de Google Business ni reseñas inventadas.

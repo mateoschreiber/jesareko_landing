@@ -146,10 +146,15 @@ class ContentContractTests(unittest.TestCase):
                 self.assertTrue(main.find_all(class_name=class_name))
 
         service_cards = main.find_all("a", "home-service-card")
-        self.assertEqual(len(service_cards), 3)
+        self.assertEqual(len(service_cards), 4)
         self.assertEqual(
-            {card.attrs.get("href") for card in service_cards},
-            {"/servicios#redes", "/servicios#seguridad", "/servicios#soporte"},
+            [card.attrs.get("href") for card in service_cards],
+            [
+                "/servicios#redes",
+                "/servicios#planos-cableado-datos",
+                "/servicios#seguridad",
+                "/servicios#soporte",
+            ],
         )
 
         images = main.find_all("img")
@@ -157,6 +162,7 @@ class ContentContractTests(unittest.TestCase):
         for filename in (
             "home-hero-infrastructure.webp",
             "home-service-networks.webp",
+            "home-service-data-cabling.webp",
             "home-service-security.webp",
             "home-service-support.webp",
         ):
@@ -169,7 +175,7 @@ class ContentContractTests(unittest.TestCase):
         self.assertNotEqual(hero.attrs.get("alt"), "")
 
         service_images = [image for image in images if "home-service-" in image.attrs.get("src", "")]
-        self.assertEqual(len(service_images), 3)
+        self.assertEqual(len(service_images), 4)
         for image in service_images:
             with self.subTest(src=image.attrs.get("src")):
                 self.assertEqual(image.attrs.get("alt"), "")
@@ -201,8 +207,8 @@ class ContentContractTests(unittest.TestCase):
         self.assertTrue(services_main.has_class("services-page"))
         self.assertTrue(services_main.find_all("nav", "services-index"))
         details = services_main.find_all("section", "services-editorial")
-        self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "seguridad", "soporte"])
-        self.assertEqual(len(services_main.find_all("figure", "services-editorial__media")), 3)
+        self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "planos-cableado-datos", "seguridad", "soporte"])
+        self.assertEqual(len(services_main.find_all("figure", "services-editorial__media")), 4)
 
         expected_assets = (
             "home-process-diagnosis.webp",
@@ -213,6 +219,7 @@ class ContentContractTests(unittest.TestCase):
             "home-case-residential.webp",
             "home-case-office.webp",
             "services-networks-detail.webp",
+            "services-data-cabling-detail.webp",
             "services-security-detail.webp",
             "services-support-detail.webp",
         )
@@ -319,7 +326,7 @@ class ContentContractTests(unittest.TestCase):
         source = html("index.html")
         positions = [source.index(f'id="{section}"') for section in ("hero", "areas", "evidence", "process", "cases", "diagnostic")]
         self.assertEqual(positions, sorted(positions))
-        self.assertEqual(source.count("service-row__item"), 3)
+        self.assertEqual(source.count("service-row__item"), 4)
         self.assertIn("Infraestructura clara. Sistemas que funcionan.", source)
         hero = source[positions[0]:positions[1]]
         cases = source[positions[4]:positions[5]]
@@ -360,17 +367,12 @@ class ContentContractTests(unittest.TestCase):
         page = parsed_html("servicios.html")
         index = next(nav for nav in page.find_all("nav") if nav.attrs.get("aria-label") == "Rutas de servicio")
         route_links = index.find_all("a", "service-row__item")
-        self.assertEqual([link.attrs.get("href") for link in route_links], ["#redes", "#seguridad", "#soporte"])
+        self.assertEqual([link.attrs.get("href") for link in route_links], ["#redes", "#planos-cableado-datos", "#seguridad", "#soporte"])
 
         details = page.find_all("section", "service-detail")
-        self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "seguridad", "soporte"])
+        self.assertEqual([detail.attrs.get("id") for detail in details], ["redes", "planos-cableado-datos", "seguridad", "soporte"])
         self.assertLess(source.index('aria-label="Rutas de servicio"'), source.index('id="redes"'))
 
-        contact_services = {
-            "redes": "Redes%20y%20WiFi",
-            "seguridad": "CCTV%2C%20alarmas%2C%20accesos%20e%20incendio",
-            "soporte": "Soporte%20e%20infraestructura",
-        }
         for detail in details:
             service = detail.attrs["id"]
             with self.subTest(service=service):
@@ -394,9 +396,16 @@ class ContentContractTests(unittest.TestCase):
                 self.assertEqual(len(lists[0].children("li")), 4)
                 notes = scope.children("p", "service-detail__note")
                 self.assertTrue(any(note.text().lower().startswith("criterio t") for note in notes))
-                contextual_links = [link for link in scope.children("a") if link.text() == "Consultar este servicio"]
+                expected_cta = "Solicitar plano de cableado" if service == "planos-cableado-datos" else "Consultar este servicio"
+                contextual_links = [link for link in scope.children("a") if link.text() == expected_cta]
                 self.assertEqual(len(contextual_links), 1)
                 self.assertEqual(contextual_links[0].attrs.get("href"), "/contacto")
+
+        data_cabling = next(detail for detail in details if detail.attrs.get("id") == "planos-cableado-datos")
+        self.assertIn("Elaboramos planos de cableado de datos", data_cabling.text())
+        self.assertIn("El cableado empieza en el plano", data_cabling.text())
+        self.assertIn("no sustituye proyectos eléctricos", data_cabling.text())
+        self.assertNotRegex(data_cabling.text().lower(), r"cálculo estructural|aprobación municipal|firma profesional")
 
         secondary_notes = page.find_all("p", "service-detail__note--secondary")
         self.assertEqual(len(secondary_notes), 1)
@@ -411,6 +420,19 @@ class ContentContractTests(unittest.TestCase):
         self.assertNotIn("Incluye:</strong>", source)
         self.assertNotIn("Conviene cuando:</strong>", source)
         self.assertNotIn("Resultado:</strong>", source)
+
+    def test_services_metadata_prioritizes_data_cabling_plans(self):
+        source = html("servicios.html")
+        title = "Planos de cableado de datos y redes en Encarnación | Jesareko"
+        description = "Planos de cableado de datos, distribución de puntos de red, cableado estructurado, redes, seguridad y soporte técnico en Encarnación e Itapúa."
+        self.assertIn(f"<title>{title}</title>", source)
+        self.assertEqual(source.count(f'content="{title}"'), 2)
+        self.assertEqual(source.count(f'content="{description}"'), 3)
+        self.assertIn('"name": "Planos de cableado de datos y redes en Encarnación"', source)
+        self.assertIn(f'"description": "{description}"', source)
+
+        homepage = html("index.html")
+        self.assertIn('"name": "Planos de cableado de datos y cableado estructurado"', homepage)
 
     def test_services_components_have_focused_styles(self):
         styles = STYLES.read_text(encoding="utf-8")
