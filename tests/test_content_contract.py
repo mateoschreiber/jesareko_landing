@@ -456,7 +456,7 @@ class ContentContractTests(unittest.TestCase):
         studies = page.find_all("article", "case-study")
 
         self.assertIn("Aplicaciones frecuentes", source)
-        self.assertEqual(len(studies), 3)
+        self.assertEqual(len(studies), 4)
         self.assertIn("Presentamos estas aplicaciones como escenarios de trabajo, no como proyectos ejecutados.", source)
         self.assertEqual(
             [study.children("div", "case-study__body")[0].children("h2")[0].text() for study in studies],
@@ -464,6 +464,7 @@ class ContentContractTests(unittest.TestCase):
                 "Comercio con puntos ciegos",
                 "Vivienda con WiFi inestable",
                 "Oficina con accesos y documentación dispersos",
+                "Obra con puntos de red sin definir",
             ],
         )
         for study in studies:
@@ -498,8 +499,8 @@ class ContentContractTests(unittest.TestCase):
 
     def test_cases_metadata_describes_frequent_scenarios(self):
         source = html("casos.html")
-        title = "Aplicaciones frecuentes de seguridad, WiFi y soporte | Jesareko"
-        description = "Aplicaciones frecuentes de seguridad, WiFi y soporte técnico para comercios, viviendas y oficinas en Encarnación e Itapúa."
+        title = "Aplicaciones de cableado de datos, seguridad, WiFi y soporte | Jesareko"
+        description = "Aplicaciones de planos de cableado de datos, seguridad, WiFi y soporte técnico para obras, comercios, viviendas y oficinas en Encarnación e Itapúa."
         self.assertIn(f"<title>{title}</title>", source)
         self.assertEqual(source.count(f'content="{title}"'), 2)
         self.assertEqual(source.count(f'content="{description}"'), 3)
