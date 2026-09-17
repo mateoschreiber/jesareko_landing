@@ -1744,6 +1744,7 @@ h3 {
 
   .home-page .home-service-card__copy { min-height: 15.5rem; }
   .services-page .services-index__item { border-block-start: 0; border-inline-end: 1px solid var(--color-line); }
+  .services-page .services-index__item:nth-child(even) { border-inline-end: 1px solid var(--color-line); }
   .services-page .services-index__item:last-child { border-inline-end: 0; }
 }
 
